@@ -5,8 +5,9 @@ class ChordDiagram {
         this.teamNames = new Set();
         loadedData.forEach(game => this.teamNames.add(game.Team));
         this.teamNames.forEach(team => this.teams.push({team: team}) );
-        const imageWidth = 30;
-        const imageHeight = 34
+        
+        const imageWidth = 50;
+        const imageHeight = 56;
 
 
         this.margin = {top: 100, right: 100, bottom: 100, left: 100};

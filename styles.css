@@ -1,6 +1,8 @@
 #chord-diagram{
     height: 800px;
     width: 800px;
+    display: block;
+    margin:auto;
 }
 #line-chart {
     width: 1250px;
