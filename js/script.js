@@ -5,4 +5,6 @@ async function loadData() {
 
 loadData().then((loadedData) => {
     console.log(loadedData)
+
+    const lineView = new LineChart(loadedData);
 });

@@ -1,0 +1,19 @@
+#line-chart {
+    width: 1250px;
+    height: 2000px;
+}
+
+.image-border-correct {
+    fill: transparent;
+    stroke: green;
+    stroke-width: 1.5;
+    shape-rendering: crispEdges;
+}
+
+.image-border-wrong {
+    fill: transparent;
+    stroke: red;
+    stroke-width: 1.5;
+
+    shape-rendering: crispEdges;
+}
