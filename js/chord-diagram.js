@@ -9,7 +9,7 @@ class ChordDiagram {
         console.log(this.teamNames);
 
 
-        this.margin = {top: 50, right: 50, bottom: 50, left: 50};
+        this.margin = {top: 100, right: 100, bottom: 100, left: 100};
         this.width = 800 - this.margin.left - this.margin.right;
         this.height = 800 - this.margin.top - this.margin.bottom;
 
@@ -23,19 +23,20 @@ class ChordDiagram {
         
         for(let [i, d] of this.teams.entries()){
             var theta = scale(i);
-            d.x = this.radius * Math.sin(theta)+ 350;
-            d.y = this.radius * Math.cos(theta) + 370;
+            d.x = this.radius * Math.sin(theta)+ (this.width/2);
+            d.y = this.radius * Math.cos(theta) + (this.height/2);
         }
 
         let diagram = d3.select('#chord-diagram');
 
 
         let nodes = d3.select('#chord-labels')
-            .selectAll('text')
+            .selectAll('circle')
             .data(this.teams)
-            .join("text")
-            .attr("x", d => d.x)
-            .attr("y", d => d.y)
-            .text(d=>d.team);
+            .join("circle")
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .attr("r", 10)
+            // .text(d=>d.team);
     }
 }
