@@ -5,8 +5,8 @@ class ChordDiagram {
         this.teamNames = new Set();
         loadedData.forEach(game => this.teamNames.add(game.Team));
         this.teamNames.forEach(team => this.teams.push({team: team}) );
-        console.log(this.teams);
-        console.log(this.teamNames);
+        const imageWidth = 30;
+        const imageHeight = 34
 
 
         this.margin = {top: 100, right: 100, bottom: 100, left: 100};
@@ -23,20 +23,18 @@ class ChordDiagram {
         
         for(let [i, d] of this.teams.entries()){
             var theta = scale(i);
-            d.x = this.radius * Math.sin(theta)+ (this.width/2);
-            d.y = this.radius * Math.cos(theta) + (this.height/2);
+            d.x = this.radius * Math.sin(theta)+ 350;
+            d.y = this.radius * Math.cos(theta) + 350;
         }
 
-        let diagram = d3.select('#chord-diagram');
-
-
-        let nodes = d3.select('#chord-labels')
-            .selectAll('circle')
+        d3.select('#chord-images')
+            .selectAll("image")
             .data(this.teams)
-            .join("circle")
-            .attr("cx", d => d.x)
-            .attr("cy", d => d.y)
-            .attr("r", 10)
-            // .text(d=>d.team);
+            .join('image')
+            .attr('x', d => d.x - imageWidth / 2)
+            .attr('y', d => d.y - imageHeight / 2)
+            .attr('width', imageWidth)
+            .attr('height', imageHeight)
+            .attr("xlink:href", d => `logos/${d.team}.png`)
     }
 }
