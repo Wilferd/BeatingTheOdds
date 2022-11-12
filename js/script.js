@@ -5,4 +5,5 @@ async function loadData() {
 
 loadData().then((loadedData) => {
     console.log(loadedData)
+    const BC = new BarChart(loadedData);
 });
