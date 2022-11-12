@@ -9,6 +9,11 @@
     height: 2000px;
 }
 
+#bar-chart {
+    width: 500px;
+    height: 500px;
+    float:right;
+}
 .image-border-correct {
     fill: transparent;
     stroke: green;
