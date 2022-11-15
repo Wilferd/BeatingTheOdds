@@ -112,6 +112,8 @@ class LineChart {
             .selectAll('path')
             .data(teamData)
             .join('path')
+            .transition()
+            .duration(1000)
             .attr('fill', 'none')
             .attr('stroke', ([group, values]) => lineColorScale(group))
             .attr('stroke-width', 1)
@@ -134,6 +136,8 @@ class LineChart {
             .selectAll("image")
             .data(data)
             .join('image')
+            .transition()
+            .duration(2000)
             .attr('x', d => xAxis(new Date(d.Date)) - imageWidth / 2)
             .attr('y', d => {
                 let odds = parseFloat(d[key]);
@@ -145,11 +149,14 @@ class LineChart {
             .attr('width', imageWidth)
             .attr('height', imageHeight)
             .attr("xlink:href", d => `logos/${d.Team}.png`)
+            
 
         d3.select('#border')
             .selectAll('rect')
             .data(data)
             .join('rect')
+            .transition()
+            .duration(2000)
             .attr('class', d => {
                 let prediction = parseFloat(d[key]);
                 if (prediction < 0 && d.Result === 'W') {
