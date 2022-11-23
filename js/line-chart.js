@@ -6,11 +6,13 @@ class LineChart {
     constructor(data) {
         let key = 'Average_Line_ML';
         // let teamData = d3.group(data, d => d.Team)
+        let teamData = d3.group(data, d => d.Team)
+        let lineColorScale = d3.scaleOrdinal(d3.schemeTableau10).domain(teamData.keys());
+        this.setUp(key, data, lineColorScale);
 
-        this.setUp(key, data);
     }
 
-    setUp(key, data) {
+    setUp(key, data, lineColorScale) {
         let context = this;
 
         let teams = ['Atlanta', 'Boston', 'Brooklyn', 'Charlotte', 'Chicago', 'Cleveland', 'Dallas', 'Denver', 'Detroit', 'Golden State', 'Houston', 'Indiana', 'L.A. Clippers', 'L.A. Lakers', 'Memphis', 'Miami', 'Milwaukee', 'Minnesota', 'New Orleans', 'New York', 'Oklahoma City', 'Orlando', 'Philadelphia', 'Phoenix', 'Portland', 'Sacramento', 'San Antonio', 'Toronto', 'Utah', 'Washington']
@@ -47,15 +49,15 @@ class LineChart {
                 }
 
                 let filteredTeams = d3.filter(data, d => nameSet.has(d.Team))
-                this.createLineChart(key, filteredTeams)
+                this.createLineChart(key, filteredTeams,lineColorScale)
             });
 
 
-        this.createLineChart(key, d3.filter(data, d => nameSet.has(d.Team)));
+        this.createLineChart(key, d3.filter(data, d => nameSet.has(d.Team)), lineColorScale);
 
     }
 
-    createLineChart(key, data) {
+    createLineChart(key, data, lineColorScale) {
         let padding = { left: 80, bottom: 140, right: 200 };
 
         let dates = data.map((row) => {
@@ -107,7 +109,6 @@ class LineChart {
 
 
         let teamData = d3.group(data, d => d.Team)
-        let lineColorScale = d3.scaleOrdinal(d3.schemeTableau10).domain(teamData.keys());
         d3.select('#lines')
             .selectAll('path')
             .data(teamData)
