@@ -1,5 +1,6 @@
 const WIDTH = 1250
 const HEIGHT = 2000
+const RADIUS = 100
 class LineChart {
 
 
@@ -12,6 +13,12 @@ class LineChart {
 
     }
 
+    /**
+     * Creates the team buttons
+     * @param {*} key 
+     * @param {*} data 
+     * @param {*} lineColorScale 
+     */
     setUp(key, data, lineColorScale) {
         let context = this;
 
@@ -49,7 +56,7 @@ class LineChart {
                 }
 
                 let filteredTeams = d3.filter(data, d => nameSet.has(d.Team))
-                this.createLineChart(key, filteredTeams,lineColorScale)
+                this.createLineChart(key, filteredTeams, lineColorScale)
             });
 
 
@@ -57,6 +64,12 @@ class LineChart {
 
     }
 
+    /**
+     * Creates the line chart with some data
+     * @param {*} key Column in data to be used (ex. 'Average_Line_ML')
+     * @param {*} data 
+     * @param {*} lineColorScale 
+     */
     createLineChart(key, data, lineColorScale) {
         let padding = { left: 80, bottom: 140, right: 200 };
 
@@ -66,7 +79,8 @@ class LineChart {
 
         const xAxis = d3.scaleTime()
             .domain([d3.min(dates), d3.max(dates)])
-            .range([padding.left, WIDTH - padding.right]);
+            .range([padding.left, WIDTH - padding.right])
+            .nice();
 
         d3
             .select('#x-axis')
@@ -132,13 +146,42 @@ class LineChart {
                 (values));
 
         const imageWidth = 20;
-        const imageHeight = 24
+        const imageHeight = 24;
+        d3.select('#border')
+        .selectAll('rect')
+        .data(data)
+        .join('rect')
+        .transition()
+        .duration(2000)
+        .attr('class', d => {
+            let prediction = parseFloat(d[key]);
+            if (prediction < 0 && d.Result === 'W') {
+                return 'image-border-correct';
+            }
+            else if (prediction > 0 && d.Result === 'L') {
+                return 'image-border-correct';
+            }
+
+            return 'image-border-wrong';
+
+        })
+        .attr('x', d => xAxis(new Date(d.Date)) - imageWidth / 2)
+        .attr('y', d => {
+            let odds = parseFloat(d[key]);
+            if (isNaN(odds)) {
+                return yAxis(0);
+            }
+            return yAxis(odds) - imageHeight / 2;
+        })
+        .attr('width', imageWidth)
+        .attr('height', imageHeight);
         d3.select('#dots')
             .selectAll("image")
             .data(data)
             .join('image')
             .transition()
             .duration(2000)
+            .attr('id', (d) => 'game'+d.GameId)
             .attr('x', d => xAxis(new Date(d.Date)) - imageWidth / 2)
             .attr('y', d => {
                 let odds = parseFloat(d[key]);
@@ -149,38 +192,142 @@ class LineChart {
             })
             .attr('width', imageWidth)
             .attr('height', imageHeight)
-            .attr("xlink:href", d => `logos/${d.Team}.png`)
-            
+            .attr("xlink:href", d => `logos/${d.Team}.png`);
 
-        d3.select('#border')
-            .selectAll('rect')
-            .data(data)
-            .join('rect')
-            .transition()
-            .duration(2000)
-            .attr('class', d => {
-                let prediction = parseFloat(d[key]);
-                if (prediction < 0 && d.Result === 'W') {
-                    return 'image-border-correct';
-                }
-                else if (prediction > 0 && d.Result === 'L') {
-                    return 'image-border-correct';
-                }
 
-                return 'image-border-wrong';
-
-            })
-            .attr('x', d => xAxis(new Date(d.Date)) - imageWidth / 2)
-            .attr('y', d => {
+        const delaunay = d3.Delaunay.from(
+            data,
+            d => xAxis(new Date(d.Date)) - imageWidth / 2,
+            d => {
                 let odds = parseFloat(d[key]);
                 if (isNaN(odds)) {
                     return yAxis(0);
                 }
                 return yAxis(odds) - imageHeight / 2;
-            })
-            .attr('width', imageWidth)
-            .attr('height', imageHeight);
+            });
+
+
+        let tooltip = d3
+            .select('#content')
+            .append('div')
+            .style('width', '200px')
+            .style('position', 'absolute')
+            .style('padding', '8px')
+            .style('border', '1px solid #ccc')
+            .style('pointer-events', 'none')
+            .style('background', 'white')
+            .style('display', 'none');
+
+
+        const mouseleft = () => {
+            tooltip.style('display', 'none');
+            d3.select('#dots')
+            .selectAll('image')
+            .style('filter', "none")
+        }
+
+        const mousemoved = (e) => {
+            let [mx, my] = d3.pointer(e);
+            find = (mx, my) => {
+                const idx = delaunay.find(mx, my);
+
+                if (idx !== null) {
+                    return data[idx];
+                }
+
+                return null;
+            }
+
+            let hover = find(mx, my);
+
+            if (!hover) return mouseleft();
+
+
+            tooltip
+                .style('display', 'block')
+                .style('position', 'absolute')
+                .style(
+                    'left',
+                    `${xAxis(new Date(hover.Date)) - imageWidth / 2}px`
+                )
+                .style('top', `${200+yAxis(parseFloat(hover[key])) - imageHeight / 2}px`)
+                .html(`<div>
+                 <strong>Team</strong>: ${hover.Team} <br>
+                 <strong>Opponent</strong>: ${hover.OppTeam} <br>
+                 <strong>Date</strong>: ${(new Date(hover.Date)).toLocaleDateString()} <br>
+                 Avg Money Line: ${hover[key]}
+                 </div>`);
+
+            
+            d3.select('#dots')
+            .selectAll('image')
+            .style('filter', d => d.GameId !== hover.GameId? 'grayscale(0.5) blur(1px)' : "none");
+        }
+
+        d3.select('#line-chart')
+            .select('#voronoi')
+            .selectAll('rect')
+            .data([0])
+            .join('rect')
+            .attr('fill', 'transparent')
+            .attr('width', WIDTH)
+            .attr('height', HEIGHT)
+            .on('mousemove', mousemoved)
+            .on('mouseleave', mouseleft);     
 
     }
+
+    /**
+     * Makes the team name palatable for an html class
+     * @param {*} name team name to make palatable
+     * @returns 
+     */
+    sanitizeTeamName(name) {
+        return "team" + name.replace(' ', '0').replaceAll('.', '1');
+    }
+
+    /**
+     * Takes a santized name and converts back
+     * @param {*} name 
+     * @returns 
+     */
+    unsantizeTeamName(name) {
+        return name.replaceAll('0', ' ').replaceAll('1', '.').slice(4);
+    }
+
+    //     mousemoved(e) {
+    //         const [mx, my] = d3.pointer(e,d3.select(this).node());
+
+    //         find = (mx, my) => {
+    //             const idx = this.delaunay.find(mx, my);
+
+    //             if (idx !== null) {
+    //                 const datum = data[idx];
+    //                 const d = distance(x(datum.date), y(datum.price_gb), mx, my);
+
+    //                 return d < radius ? datum : null;
+    //             }
+
+    //             return null;
+    //         }
+
+    //         let hover = find(mx, my);
+
+    //         if (!hover) return mouseleft();
+
+    //         // quick trick for avoiding the edges in the tooltip
+    //         const xRatio = mx / WIDTH;
+
+    //         d3
+    //             .select(this.tooltip)
+    //             .style('display', 'block')
+    //             .style(
+    //                 'left',
+    //                 `${xRatio > 0.75 ? mx - 200 : xRatio < 0.15 ? mx + 50 : mx - 50}px`
+    //             )
+    //             .style('top', `${my + 30}px`).html(`<div>
+    //                  cool stuff
+    //                  </div>`);
+    //     }
 
 }
