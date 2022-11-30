@@ -42,6 +42,7 @@ class LineChart {
                 return `url(logos/${d.replace(' ', '%20')}.png)`;
             })
             .on('click', (d) => {
+                d3.select('#flexSwitchCheckDefault').property('checked', false);
                 let selection = d3.select('#' + d.srcElement.id);
                 let className = selection.attr('class');
                 if (className === 'right') {
@@ -57,8 +58,45 @@ class LineChart {
                 this.createLineChart(key, filteredTeams, lineColorScale)
             });
 
-
         this.createLineChart(key, d3.filter(data, d => nameSet.has(d.Team)), lineColorScale);
+
+        let checkSelection = d3.select('#switch1');
+        let oldSet = new Set(nameSet);
+        checkSelection.on('click', (d) => {
+            //clear the selected team buttons
+            oldSet = new Set(nameSet);
+            nameSet.clear();
+            d3.select('#teamButtons')
+                .selectAll('input')
+                .attr('class', 'left');
+
+
+            let checked = d3.select('#flexSwitchCheckDefault').property('checked');
+
+            if (checked) {
+                //find the most mispredicted team(s)
+                let teamData = d3.group(data, d => d.Team);
+                let teamMisprediction = new Map();
+                for (let teamGames of teamData) {
+                    let numMispredicted = 0;
+                    for (let row of teamGames[1]) {
+                        let prediction = parseFloat(row[key]);
+                        if ((prediction > 0 && row.Result === 'W') ||
+                            (prediction < 0 && row.Result === 'L')) {
+                            numMispredicted++;
+                        }
+                    }
+                    teamMisprediction.set(teamGames[0], numMispredicted);
+                }
+                let maxed = [...teamMisprediction.entries()].reduce((a, e ) => e[1] > a[1] ? e : a);
+                let mispredicted = d3.filter(data, d => d.Team === maxed[0])
+                this.createLineChart(key, mispredicted, lineColorScale);
+            } else{
+                this.createLineChart(key, [], lineColorScale);
+            }
+
+
+        });
 
     }
 
@@ -218,7 +256,7 @@ class LineChart {
     }
 
     /**
-     * Uses d3-delaunay to find nearest data point, for tooltip displaying
+     * Uses d3-delaunay to find nearest data point, for tooltip displaying and line highlighting
      * 
      * Follows this tutorial: https://observablehq.com/@martgnz/distance-limited-interaction-with-d3-delaunay
      * @param {*} data 
@@ -298,7 +336,7 @@ class LineChart {
                     `${xAxis(new Date(hover.Date)) - imageWidth / 2}px`
                 )
                 .style('background', 'rgba(255,255,255,0.8)')
-                .style('top', `${180 + yAxis(parseFloat(hover[key])) - imageHeight / 2}px`)
+                .style('top', `${250 + yAxis(parseFloat(hover[key])) - imageHeight / 2}px`)
                 .html(`<div>
                  <strong>Team</strong>: ${hover.Team} <br>
                  <strong>Opponent</strong>: ${hover.OppTeam} <br>
@@ -323,7 +361,7 @@ class LineChart {
                 .selectAll('path')
                 .attr('display', d => {
                     return (this.sanitizeTeamName(d[0]) === this.sanitizeTeamName(hover.Team) ?
-                    'default' : 'none')
+                        'default' : 'none')
                 })
         };
 
