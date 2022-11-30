@@ -6,7 +6,6 @@ class LineChart {
 
     constructor(data) {
         let key = 'Average_Line_ML';
-        // let teamData = d3.group(data, d => d.Team)
         let teamData = d3.group(data, d => d.Team)
         let lineColorScale = d3.scaleOrdinal(d3.schemeTableau10).domain(teamData.keys());
         this.setUp(key, data, lineColorScale);
@@ -23,7 +22,6 @@ class LineChart {
         let context = this;
 
         let teams = ['Atlanta', 'Boston', 'Brooklyn', 'Charlotte', 'Chicago', 'Cleveland', 'Dallas', 'Denver', 'Detroit', 'Golden State', 'Houston', 'Indiana', 'L.A. Clippers', 'L.A. Lakers', 'Memphis', 'Miami', 'Milwaukee', 'Minnesota', 'New Orleans', 'New York', 'Oklahoma City', 'Orlando', 'Philadelphia', 'Phoenix', 'Portland', 'Sacramento', 'San Antonio', 'Toronto', 'Utah', 'Washington']
-        //let nameSet = new Set(teams);
         let nameSet = new Set(['Utah']);
         d3.select('#teamButtons')
             .selectAll('input')
@@ -73,8 +71,104 @@ class LineChart {
     createLineChart(key, data, lineColorScale) {
         let padding = { left: 80, bottom: 140, right: 200 };
 
+        const { xAxis, yAxis } = this.createAxes(data, padding, key);
+
+
+        let teamData = d3.group(data, d => d.Team)
+        this.createLines(teamData, lineColorScale, xAxis, key, yAxis);
+
+        const imageWidth = 20;
+        const imageHeight = 24;
+        this.createDots(data, xAxis, imageWidth, key, yAxis, imageHeight);
+        this.createBorder(data, key, xAxis, imageWidth, yAxis, imageHeight);
+        this.voronoi(data, xAxis, imageWidth, key, yAxis, imageHeight);
+
+    }
+
+    /**
+     * Creates the lines for the line chart
+     * @param {*} teamData 
+     * @param {*} lineColorScale 
+     * @param {*} xAxis 
+     * @param {*} key 
+     * @param {*} yAxis 
+     */
+    createLines(teamData, lineColorScale, xAxis, key, yAxis) {
+        d3.select('#lines')
+            .selectAll('path')
+            .data(teamData)
+            .join('path')
+            .transition()
+            .duration(1000)
+            .attr('fill', 'none')
+            .attr('stroke', ([group, values]) => lineColorScale(group))
+            .attr('stroke-width', 1)
+            .attr('id', d => 'line' + this.sanitizeTeamName(d[0]))
+            .attr('d', ([group, values]) => d3.line()
+                .x((d) => {
+                    return xAxis(new Date(d.Date));
+                })
+                .y((d) => {
+                    let odds = parseFloat(d[key]);
+                    if (isNaN(odds)) {
+                        return yAxis(0);
+                    }
+                    return yAxis(odds);
+                })(values));
+    }
+
+    /**
+     * Creates the border surrounding each dot
+     * Green for correct prediction
+     * Red for incorrect prediction
+     * @param {*} data 
+     * @param {*} key 
+     * @param {*} xAxis 
+     * @param {*} imageWidth 
+     * @param {*} yAxis 
+     * @param {*} imageHeight 
+     */
+    createBorder(data, key, xAxis, imageWidth, yAxis, imageHeight) {
+        d3.select('#border')
+            .selectAll('rect')
+            .data(data)
+            .join('rect')
+            .transition()
+            .duration(2000)
+            .attr('class', d => {
+                let prediction = parseFloat(d[key]);
+                if (prediction < 0 && d.Result === 'W') {
+                    return 'image-border-correct';
+                }
+                else if (prediction > 0 && d.Result === 'L') {
+                    return 'image-border-correct';
+                }
+
+                return 'image-border-wrong';
+
+            })
+            .attr('x', d => xAxis(new Date(d.Date)) - imageWidth / 2)
+            .attr('y', d => {
+                let odds = parseFloat(d[key]);
+                if (isNaN(odds)) {
+                    return yAxis(0);
+                }
+                return yAxis(odds) - imageHeight / 2;
+            })
+            .attr('width', imageWidth)
+            .attr('height', imageHeight);
+    }
+
+    /**
+     * Makes the x and y axes
+     * @param {*} data 
+     * @param {*} padding 
+     * @param {*} key 
+     * @returns the scales used for both axes
+     */
+    createAxes(data, padding, key) {
         let dates = data.map((row) => {
-            return new Date(row.Date)
+            return new Date(row.Date);
         });
 
         const xAxis = d3.scaleTime()
@@ -120,81 +214,21 @@ class LineChart {
             .attr('x', -285)
             .attr('y', 20)
             .attr('transform', 'rotate(-90)');
+        return { xAxis, yAxis };
+    }
 
-
-        let teamData = d3.group(data, d => d.Team)
-        d3.select('#lines')
-            .selectAll('path')
-            .data(teamData)
-            .join('path')
-            .transition()
-            .duration(1000)
-            .attr('fill', 'none')
-            .attr('stroke', ([group, values]) => lineColorScale(group))
-            .attr('stroke-width', 1)
-            .attr('d', ([group, values]) => d3.line()
-                .x((d) => {
-                    return xAxis(new Date(d.Date));
-                })
-                .y((d) => {
-                    let odds = parseFloat(d[key]);
-                    if (isNaN(odds)) {
-                        return yAxis(0);
-                    }
-                    return yAxis(odds);
-                })
-                (values));
-
-        const imageWidth = 20;
-        const imageHeight = 24;
-        d3.select('#border')
-        .selectAll('rect')
-        .data(data)
-        .join('rect')
-        .transition()
-        .duration(2000)
-        .attr('class', d => {
-            let prediction = parseFloat(d[key]);
-            if (prediction < 0 && d.Result === 'W') {
-                return 'image-border-correct';
-            }
-            else if (prediction > 0 && d.Result === 'L') {
-                return 'image-border-correct';
-            }
-
-            return 'image-border-wrong';
-
-        })
-        .attr('x', d => xAxis(new Date(d.Date)) - imageWidth / 2)
-        .attr('y', d => {
-            let odds = parseFloat(d[key]);
-            if (isNaN(odds)) {
-                return yAxis(0);
-            }
-            return yAxis(odds) - imageHeight / 2;
-        })
-        .attr('width', imageWidth)
-        .attr('height', imageHeight);
-        d3.select('#dots')
-            .selectAll("image")
-            .data(data)
-            .join('image')
-            .transition()
-            .duration(2000)
-            .attr('id', (d) => 'game'+d.GameId)
-            .attr('x', d => xAxis(new Date(d.Date)) - imageWidth / 2)
-            .attr('y', d => {
-                let odds = parseFloat(d[key]);
-                if (isNaN(odds)) {
-                    return yAxis(0);
-                }
-                return yAxis(odds) - imageHeight / 2;
-            })
-            .attr('width', imageWidth)
-            .attr('height', imageHeight)
-            .attr("xlink:href", d => `logos/${d.Team}.png`);
-
-
+    /**
+     * Uses d3-delaunay to find nearest data point, for tooltip displaying
+     * 
+     * Follows this tutorial: https://observablehq.com/@martgnz/distance-limited-interaction-with-d3-delaunay
+     * @param {*} data 
+     * @param {*} xAxis 
+     * @param {*} imageWidth 
+     * @param {*} key 
+     * @param {*} yAxis 
+     * @param {*} imageHeight 
+     */
+    voronoi(data, xAxis, imageWidth, key, yAxis, imageHeight) {
         const delaunay = d3.Delaunay.from(
             data,
             d => xAxis(new Date(d.Date)) - imageWidth / 2,
@@ -222,9 +256,14 @@ class LineChart {
         const mouseleft = () => {
             tooltip.style('display', 'none');
             d3.select('#dots')
-            .selectAll('image')
-            .style('filter', "none")
-        }
+                .selectAll('image')
+                .style('filter', "none");
+
+            d3.select('#lines')
+                .selectAll('path')
+                .attr('stroke-width', 1)
+                .attr('display', 'default')
+        };
 
         const mousemoved = (e) => {
             let [mx, my] = d3.pointer(e);
@@ -236,13 +275,21 @@ class LineChart {
                 }
 
                 return null;
-            }
+            };
 
             let hover = find(mx, my);
 
-            if (!hover) return mouseleft();
+            if (!hover)
+                return mouseleft();
 
-
+            let prediction = parseFloat(hover[key]);
+            let color = "red";
+            let predictionText = 'Incorrect';
+            if ((prediction < 0 && hover.Result === 'W')
+                || (prediction > 0 && hover.Result === 'L')) {
+                color = 'green';
+                predictionText = 'Correct';
+            }
             tooltip
                 .style('display', 'block')
                 .style('position', 'absolute')
@@ -250,19 +297,35 @@ class LineChart {
                     'left',
                     `${xAxis(new Date(hover.Date)) - imageWidth / 2}px`
                 )
-                .style('top', `${200+yAxis(parseFloat(hover[key])) - imageHeight / 2}px`)
+                .style('background', 'rgba(255,255,255,0.8)')
+                .style('top', `${180 + yAxis(parseFloat(hover[key])) - imageHeight / 2}px`)
                 .html(`<div>
                  <strong>Team</strong>: ${hover.Team} <br>
                  <strong>Opponent</strong>: ${hover.OppTeam} <br>
                  <strong>Date</strong>: ${(new Date(hover.Date)).toLocaleDateString()} <br>
                  Avg Money Line: ${hover[key]}
+                <p style="color:${color}">${predictionText} Prediction</p>
                  </div>`);
 
-            
+
+            //blur all of the other teams
             d3.select('#dots')
-            .selectAll('image')
-            .style('filter', d => d.GameId !== hover.GameId? 'grayscale(0.5) blur(1px)' : "none");
-        }
+                .selectAll('image')
+                .style('filter', d => d.Team !== hover.Team ? 'grayscale(0.5) blur(1px)' : "none");
+
+
+            //emphasize the line
+            d3.select('#lines')
+                .select('#line' + this.sanitizeTeamName(hover.Team))
+                .attr('stroke-width', 3)
+
+            d3.select('#lines')
+                .selectAll('path')
+                .attr('display', d => {
+                    return (this.sanitizeTeamName(d[0]) === this.sanitizeTeamName(hover.Team) ?
+                    'default' : 'none')
+                })
+        };
 
         d3.select('#line-chart')
             .select('#voronoi')
@@ -273,8 +336,37 @@ class LineChart {
             .attr('width', WIDTH)
             .attr('height', HEIGHT)
             .on('mousemove', mousemoved)
-            .on('mouseleave', mouseleft);     
+            .on('mouseleave', mouseleft);
+    }
 
+    /**
+     * Creates line chart dots corresponding to each team in the data
+     * @param {*} data 
+     * @param {*} xAxis 
+     * @param {*} imageWidth 
+     * @param {*} key 
+     * @param {*} yAxis 
+     * @param {*} imageHeight 
+     */
+    createDots(data, xAxis, imageWidth, key, yAxis, imageHeight) {
+        d3.select('#dots')
+            .selectAll("image")
+            .data(data)
+            .join('image')
+            .transition()
+            .duration(2000)
+            .attr('id', (d) => 'game' + d.GameId)
+            .attr('x', d => xAxis(new Date(d.Date)) - imageWidth / 2)
+            .attr('y', d => {
+                let odds = parseFloat(d[key]);
+                if (isNaN(odds)) {
+                    return yAxis(0);
+                }
+                return yAxis(odds) - imageHeight / 2;
+            })
+            .attr('width', imageWidth)
+            .attr('height', imageHeight)
+            .attr("xlink:href", d => `logos/${d.Team}.png`);
     }
 
     /**
@@ -283,7 +375,7 @@ class LineChart {
      * @returns 
      */
     sanitizeTeamName(name) {
-        return "team" + name.replace(' ', '0').replaceAll('.', '1');
+        return name.replace(' ', '0').replaceAll('.', '1');
     }
 
     /**
@@ -292,42 +384,8 @@ class LineChart {
      * @returns 
      */
     unsantizeTeamName(name) {
-        return name.replaceAll('0', ' ').replaceAll('1', '.').slice(4);
+        return name.replaceAll('0', ' ').replaceAll('1', '.');
     }
 
-    //     mousemoved(e) {
-    //         const [mx, my] = d3.pointer(e,d3.select(this).node());
-
-    //         find = (mx, my) => {
-    //             const idx = this.delaunay.find(mx, my);
-
-    //             if (idx !== null) {
-    //                 const datum = data[idx];
-    //                 const d = distance(x(datum.date), y(datum.price_gb), mx, my);
-
-    //                 return d < radius ? datum : null;
-    //             }
-
-    //             return null;
-    //         }
-
-    //         let hover = find(mx, my);
-
-    //         if (!hover) return mouseleft();
-
-    //         // quick trick for avoiding the edges in the tooltip
-    //         const xRatio = mx / WIDTH;
-
-    //         d3
-    //             .select(this.tooltip)
-    //             .style('display', 'block')
-    //             .style(
-    //                 'left',
-    //                 `${xRatio > 0.75 ? mx - 200 : xRatio < 0.15 ? mx + 50 : mx - 50}px`
-    //             )
-    //             .style('top', `${my + 30}px`).html(`<div>
-    //                  cool stuff
-    //                  </div>`);
-    //     }
 
 }
