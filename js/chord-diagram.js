@@ -9,13 +9,15 @@ class ChordDiagram {
         this.teamNames = new Set();
         loadedData.forEach(game => this.teamNames.add(game.Team));
         this.teamNames.forEach(team => this.teams.push({team: team}));
-        console.log(d3.group(loadedData, d => d.Team).get('Atlanta'))
 
         this.teams.forEach(team => team.data = d3.group(loadedData, d => d.Team).get(team.team))
-        console.log(this.teams)
         
-        this.imageWidth = 50;
-        this.imageHeight = 56;
+        var winLoseColorScale = d3.scaleOrdinal()
+            .domain([0,4])
+            .range(["red","green"]);
+
+        this.imageWidth = 60;
+        this.imageHeight = 60;
 
 
         this.margin = {top: 100, right: 100, bottom: 100, left: 100};
@@ -53,13 +55,11 @@ class ChordDiagram {
             .selectAll("line")
             .data(this.teams.filter(d => d.team === this.state.selectedTeam)[0].data)
             .join('line')
-            .transition()
-            .duration(1000)
             .attr('x1', d => this.teams.filter(d2 => d2.team === d.Team)[0].x)
             .attr('y1', d => this.teams.filter(d2 => d2.team === d.Team)[0].y)
             .attr('x2', d => this.teams.filter(d2 => d2.team === d.OppTeam)[0].x)
             .attr('y2', d => this.teams.filter(d2 => d2.team === d.OppTeam)[0].y)
-            .attr("stroke-width", 2)
+            .attr("stroke-width", 3)
             .attr("stroke", d=>d.Result === 'W' ? 'green' : 'red')
 
         d3.select('#chord-images')
@@ -67,30 +67,52 @@ class ChordDiagram {
             .data(this.teams, d=>d.team)
             .join('image')
             .transition()
-            .duration(1000)
+            .duration(500)
             .attr('x', d => d.x - this.imageWidth / 2)
             .attr('y', d => d.y - this.imageHeight / 2)
             .attr('width', this.imageWidth)
             .attr('height', this.imageHeight)
             .attr("xlink:href", d => `logos/${d.team}.png`)
 
+        d3.select("#chord-images").raise()
+
     }
 
     assignPositions(){
         const scale = d3.scaleLinear()
-        .domain([0, this.teams.length])
+        .domain([1, this.teams.length])
         .range([0, 2 * Math.PI]);
 
         if(this.state.selectedTeam){
             let team = JSON.parse(JSON.stringify(this.teams.filter(d => d.team === this.state.selectedTeam)[0]))
+            this.shuffleArray(this.teams)
             this.teams = this.teams.filter(d => d.team !== this.state.selectedTeam)
-            this.teams.splice(15, 0, team)
+            this.teams.splice(0, 0, team)
         }
-
+        console.log(this.teams)
         for(let [i, d] of this.teams.entries()){
+            if(i === 0){
+                d.x = 350;
+                d.y = 350;
+
+                continue
+            }
             var theta = scale(i);
             d.x = this.radius * Math.sin(theta)+ 350;
             d.y = this.radius * Math.cos(theta) + 350;
+        }
+    }
+
+    calculateWins(){
+
+    }
+
+    shuffleArray(array) {
+        for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
         }
     }
 }
