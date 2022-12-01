@@ -5,6 +5,10 @@
     margin: auto;
 }
 
+#chord-images {
+    cursor: pointer;
+}
+
 #teamButtons{
     width: 1000px;
     overflow-y: auto;
