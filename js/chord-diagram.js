@@ -2,7 +2,7 @@ class ChordDiagram {
     constructor(loadedData){
         this.state =
         {
-            selectedTeam: null,
+            selectedTeam: "Utah",
         }
         this.loadedData = loadedData;
         this.teams = [];
@@ -38,6 +38,8 @@ class ChordDiagram {
             .attr('height', this.imageHeight)
             .attr("xlink:href", d => `logos/${d.team}.png`)
 
+        this.update()
+
         d3.select('#chord-images').on("click", (d) => {
             this.state.selectedTeam = d.srcElement.__data__.team;
             console.log(this.state.selectedTeam)
@@ -57,7 +59,7 @@ class ChordDiagram {
             .attr('y1', d => this.teams.filter(d2 => d2.team === d.Team)[0].y)
             .attr('x2', d => this.teams.filter(d2 => d2.team === d.OppTeam)[0].x)
             .attr('y2', d => this.teams.filter(d2 => d2.team === d.OppTeam)[0].y)
-            .attr("stroke-width", 1)
+            .attr("stroke-width", 2)
             .attr("stroke", d=>d.Result === 'W' ? 'green' : 'red')
 
         d3.select('#chord-images')
