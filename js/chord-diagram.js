@@ -9,7 +9,10 @@ class ChordDiagram {
         this.teamNames = new Set();
         loadedData.forEach(game => this.teamNames.add(game.Team));
         this.teamNames.forEach(team => this.teams.push({team: team}));
-        console.log(d3.group(loadedData, d => d.Team))
+        console.log(d3.group(loadedData, d => d.Team).get('Atlanta'))
+
+        this.teams.forEach(team => team.data = d3.group(loadedData, d => d.Team).get(team.team))
+        console.log(this.teams)
         
         this.imageWidth = 50;
         this.imageHeight = 56;
@@ -44,6 +47,19 @@ class ChordDiagram {
     }
 
     update(){
+        d3.select("#chord-lines")
+            .selectAll("line")
+            .data(this.teams.filter(d => d.team === this.state.selectedTeam)[0].data)
+            .join('line')
+            .transition()
+            .duration(1000)
+            .attr('x1', d => this.teams.filter(d2 => d2.team === d.Team)[0].x)
+            .attr('y1', d => this.teams.filter(d2 => d2.team === d.Team)[0].y)
+            .attr('x2', d => this.teams.filter(d2 => d2.team === d.OppTeam)[0].x)
+            .attr('y2', d => this.teams.filter(d2 => d2.team === d.OppTeam)[0].y)
+            .attr("stroke-width", 1)
+            .attr("stroke", d=>d.Result === 'W' ? 'green' : 'red')
+
         d3.select('#chord-images')
             .selectAll("image")
             .data(this.teams, d=>d.team)
@@ -55,19 +71,20 @@ class ChordDiagram {
             .attr('width', this.imageWidth)
             .attr('height', this.imageHeight)
             .attr("xlink:href", d => `logos/${d.team}.png`)
+
     }
 
     assignPositions(){
         const scale = d3.scaleLinear()
         .domain([0, this.teams.length])
         .range([0, 2 * Math.PI]);
+
         if(this.state.selectedTeam){
             let team = JSON.parse(JSON.stringify(this.teams.filter(d => d.team === this.state.selectedTeam)[0]))
-            console.log(this.teams.map(d=>d.team).indexOf(this.state.selectedTeam))
             this.teams = this.teams.filter(d => d.team !== this.state.selectedTeam)
             this.teams.splice(15, 0, team)
         }
-        console.log(this.teams)
+
         for(let [i, d] of this.teams.entries()){
             var theta = scale(i);
             d.x = this.radius * Math.sin(theta)+ 350;
