@@ -23,6 +23,10 @@
     background-color: #4CAF50;
 }
 
+#predictionButtons{
+    margin: 15px;
+}
+
 #line-chart {
     width: 1250px;
     height: 2000px;
