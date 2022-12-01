@@ -13,6 +13,11 @@ class LineChart {
         });
         this.dateStart = d3.min(dates);
         this.dateEnd = d3.max(dates);
+
+        this.originalStart = this.dateStart;
+        this.originalEnd = this.dateEnd;
+
+        this.originalData = data;
         this.setUp(key, data, lineColorScale);
 
     }
@@ -83,6 +88,9 @@ class LineChart {
             let checked = d3.select('#flexSwitchCheckDefault').property('checked');
 
             if (checked) {
+                //get the recent date selection
+                data = this.handleDateFiltering(key, data, lineColorScale);
+
                 //find the most mispredicted team(s)
                 let teamData = d3.group(data, d => d.Team);
                 let teamMisprediction = new Map();
@@ -117,6 +125,8 @@ class LineChart {
 
             let checked = d3.select('#flexSwitchCheckDefault2').property('checked');
             if (checked) {
+                //get the recent date selection
+                data = this.handleDateFiltering(key, data, lineColorScale);
                 //find the most correctly predicted team(s)
                 let teamData = d3.group(data, d => d.Team);
                 let teamCorrectPrediction = new Map();
@@ -141,7 +151,22 @@ class LineChart {
 
     }
 
+    /**
+     * Uses the data passed in to filter output data based on the calendar date
+     * @param {*} key 
+     * @param {*} data use teams in data to filter even more
+     * @param {*} lineColorScale 
+     * @returns 
+     */
     handleDateFiltering(key, data, lineColorScale) {
+        //get the teams used by this data
+        //this is hacky
+        let teamNameSet = new Set();
+        for(let row of data){
+            teamNameSet.add(row.Team);
+        }
+        data = d3.filter(this.originalData, d => teamNameSet.has(d.Team));
+
         let dates = data.map((row) => {
             return new Date(row.Date);
         });
@@ -150,10 +175,10 @@ class LineChart {
         $(function () {
             $('input[name="daterange"]').daterangepicker({
                 opens: 'left',
-                // startDate: d3.min(dates),
-                // endDate: d3.max(dates),
-                minDate: d3.min(dates),
-                maxDate: d3.max(dates)
+                startDate: this.dateStart,
+                endDate: this.dateEnd,
+                minDate: outerContext.originalStart,
+                maxDate: outerContext.originalEnd
             }, function (start, end, label) {
                 console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
                 let filtered = d3.filter(data, d => {
