@@ -8,6 +8,11 @@ class LineChart {
         let key = 'Average_Line_ML';
         let teamData = d3.group(data, d => d.Team)
         let lineColorScale = d3.scaleOrdinal(d3.schemeTableau10).domain(teamData.keys());
+        let dates = data.map((row) => {
+            return new Date(row.Date);
+        });
+        this.dateStart = d3.min(dates);
+        this.dateEnd = d3.max(dates);
         this.setUp(key, data, lineColorScale);
 
     }
@@ -60,7 +65,8 @@ class LineChart {
                 this.createLineChart(key, filteredTeams, lineColorScale)
             });
 
-        this.createLineChart(key, d3.filter(data, d => nameSet.has(d.Team)), lineColorScale);
+        let teamFiltered = d3.filter(data, d => nameSet.has(d.Team));
+        this.createLineChart(key, teamFiltered, lineColorScale);
 
         let checkSelection = d3.select('#switch1');
         let oldSet = new Set(nameSet);
@@ -120,7 +126,7 @@ class LineChart {
                         let prediction = parseFloat(row[key]);
                         if ((prediction < 0 && row.Result === 'W') ||
                             (prediction > 0 && row.Result === 'L')) {
-                                numCorrectlyPredicted++;
+                            numCorrectlyPredicted++;
                         }
                     }
                     teamCorrectPrediction.set(teamGames[0], numCorrectlyPredicted);
@@ -135,6 +141,38 @@ class LineChart {
 
     }
 
+    handleDateFiltering(key, data, lineColorScale) {
+        let dates = data.map((row) => {
+            return new Date(row.Date);
+        });
+        let outerContext = this;
+        
+        $(function () {
+            $('input[name="daterange"]').daterangepicker({
+                opens: 'left',
+                // startDate: d3.min(dates),
+                // endDate: d3.max(dates),
+                minDate: d3.min(dates),
+                maxDate: d3.max(dates)
+            }, function (start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                let filtered = d3.filter(data, d => {
+                    let gameDate = new Date(d.Date);
+                    return gameDate >= start && gameDate <= end;
+                });
+
+                //every time date selection happens need to update globally
+                outerContext.dateStart = start;
+                outerContext.dateEnd = end;
+                outerContext.createLineChart(key, filtered, lineColorScale)
+            });
+        });
+
+        return d3.filter(data, d => {
+            let gameDate = new Date(d.Date);
+            return gameDate >= this.dateStart && gameDate <= this.dateEnd;
+        });
+    }
     /**
      * Creates the line chart with some data
      * @param {*} key Column in data to be used (ex. 'Average_Line_ML')
@@ -142,6 +180,8 @@ class LineChart {
      * @param {*} lineColorScale 
      */
     createLineChart(key, data, lineColorScale) {
+       data = this.handleDateFiltering(key, data, lineColorScale);
+
         let padding = { left: 80, bottom: 140, right: 200 };
 
         const { xAxis, yAxis } = this.createAxes(data, padding, key);
