@@ -43,6 +43,8 @@ class LineChart {
             })
             .on('click', (d) => {
                 d3.select('#flexSwitchCheckDefault').property('checked', false);
+                d3.select('#flexSwitchCheckDefault2').property('checked', false);
+
                 let selection = d3.select('#' + d.srcElement.id);
                 let className = selection.attr('class');
                 if (className === 'right') {
@@ -64,12 +66,13 @@ class LineChart {
         let oldSet = new Set(nameSet);
         checkSelection.on('click', (d) => {
             //clear the selected team buttons
+            d3.select('#flexSwitchCheckDefault2').property('checked', false);
+
             oldSet = new Set(nameSet);
             nameSet.clear();
             d3.select('#teamButtons')
                 .selectAll('input')
                 .attr('class', 'left');
-
 
             let checked = d3.select('#flexSwitchCheckDefault').property('checked');
 
@@ -88,14 +91,46 @@ class LineChart {
                     }
                     teamMisprediction.set(teamGames[0], numMispredicted);
                 }
-                let maxed = [...teamMisprediction.entries()].reduce((a, e ) => e[1] > a[1] ? e : a);
+                let maxed = [...teamMisprediction.entries()].reduce((a, e) => e[1] > a[1] ? e : a);
                 let mispredicted = d3.filter(data, d => d.Team === maxed[0])
                 this.createLineChart(key, mispredicted, lineColorScale);
-            } else{
+            } else {
                 this.createLineChart(key, [], lineColorScale);
             }
+        });
 
+        //the most correctly predicted team
+        let checkSelection2 = d3.select('#switch2');
+        checkSelection2.on('click', d => {
+            d3.select('#flexSwitchCheckDefault').property('checked', false);
+            oldSet = new Set(nameSet);
+            nameSet.clear();
+            d3.select('#teamButtons')
+                .selectAll('input')
+                .attr('class', 'left');
 
+            let checked = d3.select('#flexSwitchCheckDefault2').property('checked');
+            if (checked) {
+                //find the most correctly predicted team(s)
+                let teamData = d3.group(data, d => d.Team);
+                let teamCorrectPrediction = new Map();
+                for (let teamGames of teamData) {
+                    let numCorrectlyPredicted = 0;
+                    for (let row of teamGames[1]) {
+                        let prediction = parseFloat(row[key]);
+                        if ((prediction < 0 && row.Result === 'W') ||
+                            (prediction > 0 && row.Result === 'L')) {
+                                numCorrectlyPredicted++;
+                        }
+                    }
+                    teamCorrectPrediction.set(teamGames[0], numCorrectlyPredicted);
+                }
+                let maxed = [...teamCorrectPrediction.entries()].reduce((a, e) => e[1] > a[1] ? e : a);
+                let correctlyPredicted = d3.filter(data, d => d.Team === maxed[0])
+                this.createLineChart(key, correctlyPredicted, lineColorScale);
+            } else {
+                this.createLineChart(key, [], lineColorScale);
+            }
         });
 
     }
