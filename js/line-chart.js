@@ -7,7 +7,52 @@ class LineChart {
         let key = 'Average_Line_ML';
         // let teamData = d3.group(data, d => d.Team)
 
-        this.createLineChart(key, data);
+        this.setUp(key, data);
+    }
+
+    setUp(key, data) {
+        let context = this;
+
+        let teams = ['Atlanta', 'Boston', 'Brooklyn', 'Charlotte', 'Chicago', 'Cleveland', 'Dallas', 'Denver', 'Detroit', 'Golden State', 'Houston', 'Indiana', 'L.A. Clippers', 'L.A. Lakers', 'Memphis', 'Miami', 'Milwaukee', 'Minnesota', 'New Orleans', 'New York', 'Oklahoma City', 'Orlando', 'Philadelphia', 'Phoenix', 'Portland', 'Sacramento', 'San Antonio', 'Toronto', 'Utah', 'Washington']
+        //let nameSet = new Set(teams);
+        let nameSet = new Set(['Utah']);
+        d3.select('#teamButtons')
+            .selectAll('input')
+            .data(teams)
+            .join('input')
+            .attr('id', d => {
+                let idName = d.replace(' ', '0').replaceAll('.', '1');
+                return idName
+            })
+            .attr('type', 'image')
+            .attr('class', d => {
+                if (d === 'Utah')
+                    return 'right';
+                return 'left';
+            })
+            .attr('value', '')
+            .style('background-image', d => {
+                return `url(logos/${d.replace(' ', '%20')}.png)`;
+            })
+            .on('click', (d) => {
+                let selection = d3.select('#' + d.srcElement.id);
+                let className = selection.attr('class');
+                if (className === 'right') {
+                    //unselect the team
+                    nameSet.delete((d.srcElement.id).replaceAll('0', ' ').replaceAll('1', '.'));
+                    selection.attr('class', 'left');
+                } else {
+                    nameSet.add((d.srcElement.id).replaceAll('0', ' ').replaceAll('1', '.'));
+                    selection.attr('class', 'right');
+                }
+
+                let filteredTeams = d3.filter(data, d => nameSet.has(d.Team))
+                this.createLineChart(key, filteredTeams)
+            });
+
+
+        this.createLineChart(key, d3.filter(data, d => nameSet.has(d.Team)));
+
     }
 
     createLineChart(key, data) {
@@ -67,6 +112,8 @@ class LineChart {
             .selectAll('path')
             .data(teamData)
             .join('path')
+            .transition()
+            .duration(1000)
             .attr('fill', 'none')
             .attr('stroke', ([group, values]) => lineColorScale(group))
             .attr('stroke-width', 1)
@@ -89,6 +136,8 @@ class LineChart {
             .selectAll("image")
             .data(data)
             .join('image')
+            .transition()
+            .duration(2000)
             .attr('x', d => xAxis(new Date(d.Date)) - imageWidth / 2)
             .attr('y', d => {
                 let odds = parseFloat(d[key]);
@@ -100,11 +149,14 @@ class LineChart {
             .attr('width', imageWidth)
             .attr('height', imageHeight)
             .attr("xlink:href", d => `logos/${d.Team}.png`)
+            
 
         d3.select('#border')
             .selectAll('rect')
             .data(data)
             .join('rect')
+            .transition()
+            .duration(2000)
             .attr('class', d => {
                 let prediction = parseFloat(d[key]);
                 if (prediction < 0 && d.Result === 'W') {
