@@ -6,6 +6,6 @@ async function loadData() {
 loadData().then((loadedData) => {
     console.log(loadedData)
     const BC = new BarChart(loadedData);
-    const lineView = new LineChart(loadedData);
+    const lineView = new LineChart(loadedData, BC);
     const chord = new ChordDiagram(loadedData);
 });
