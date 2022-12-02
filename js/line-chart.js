@@ -1,5 +1,5 @@
 const WIDTH = 1250
-const HEIGHT = 2000
+const HEIGHT = 750
 const RADIUS = 100
 class LineChart {
 
@@ -19,9 +19,52 @@ class LineChart {
 
         this.originalData = data;
         this.setUp(key, data, lineColorScale);
-
+        this.createKey();
     }
 
+    createKey() {
+        let selection = d3.select("#key-svg");
+        const imageWidth = 20;
+        const imageHeight = 24;
+        const startingImageX = 80;
+        selection.append('image')
+            .attr('x', startingImageX)
+            .attr('y', 20)
+            .attr('width', imageWidth)
+            .attr('height', imageHeight)
+            .attr("xlink:href", d => `logos/ball.png`);
+
+        selection.append('rect')
+            .attr('class', 'image-border-correct')
+            .attr('x', startingImageX)
+            .attr('y', 20)
+            .attr('width', imageWidth)
+            .attr('height', imageHeight);
+
+        selection.append('text')
+            .text('Correctly Predicted')
+            .attr('transform', `translate( ${startingImageX + 40}, 35)`);
+
+        const secondImageX = startingImageX + 200;
+            selection.append('image')
+            .attr('x', secondImageX)
+            .attr('y', 20)
+            .attr('width', imageWidth)
+            .attr('height', imageHeight)
+            .attr("xlink:href", d => `logos/ball.png`);
+
+        selection.append('rect')
+            .attr('class', 'image-border-wrong')
+            .attr('x', secondImageX)
+            .attr('y', 20)
+            .attr('width', imageWidth)
+            .attr('height', imageHeight);
+
+        selection.append('text')
+            .text('Incorrectly Predicted')
+            .attr('transform', `translate( ${secondImageX + 40}, 35)`);
+
+    }
     /**
      * Creates the team buttons
      * @param {*} key 
@@ -162,7 +205,7 @@ class LineChart {
         //get the teams used by this data
         //this is hacky
         let teamNameSet = new Set();
-        for(let row of data){
+        for (let row of data) {
             teamNameSet.add(row.Team);
         }
         data = d3.filter(this.originalData, d => teamNameSet.has(d.Team));
@@ -171,7 +214,7 @@ class LineChart {
             return new Date(row.Date);
         });
         let outerContext = this;
-        
+
         $(function () {
             $('input[name="daterange"]').daterangepicker({
                 opens: 'left',
@@ -205,7 +248,7 @@ class LineChart {
      * @param {*} lineColorScale 
      */
     createLineChart(key, data, lineColorScale) {
-       data = this.handleDateFiltering(key, data, lineColorScale);
+        data = this.handleDateFiltering(key, data, lineColorScale);
 
         let padding = { left: 80, bottom: 140, right: 200 };
 
@@ -436,7 +479,7 @@ class LineChart {
                     `${xAxis(new Date(hover.Date)) - imageWidth / 2}px`
                 )
                 .style('background', 'rgba(255,255,255,0.8)')
-                .style('top', `${250 + yAxis(parseFloat(hover[key])) - imageHeight / 2}px`)
+                .style('top', `${350 + yAxis(parseFloat(hover[key])) - imageHeight / 2}px`)
                 .html(`<div>
                  <strong>Team</strong>: ${hover.Team} <br>
                  <strong>Opponent</strong>: ${hover.OppTeam} <br>
