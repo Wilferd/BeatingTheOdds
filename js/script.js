@@ -1,6 +1,6 @@
 async function loadData() {
 
-    return await d3.csv('./data/2016-17/vegas.txt');
+    return await d3.csv('./data/2018-19/vegas.txt');
 }
 
 loadData().then((loadedData) => {

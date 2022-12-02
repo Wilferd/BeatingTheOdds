@@ -5,6 +5,12 @@
     margin: auto;
 }
 
+#bar-chart-radios{
+    position:absolute;
+    top:65%;
+    left:65%;
+}
+
 #chord-images {
     cursor: pointer;
 }
@@ -12,7 +18,6 @@
 #teamButtons{
     width: 1000px;
     overflow-y: auto;
-
 }
 
 #teamButtons > input{
@@ -24,7 +29,9 @@
 }
 
 #chord-diagram-control-container{
-    margin-left: 42%;
+    position: absolute;
+    top:150%;
+    left:10%;
     width: fit-content;
     height: fit-content;
 }

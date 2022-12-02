@@ -1,7 +1,7 @@
 class BarChart {
     constructor(loadedData) {
         this.loadedData = loadedData;
-        this.margin = { left: 30, right: 50, top: 25, bottom: 25 }
+        this.margin = { left: 40, right: 50, top: 25, bottom: 25 }
 
         console.log(d3.select("#flexRadioDefault2").property("checked"))
 
@@ -162,8 +162,10 @@ class BarChart {
             .attr("x", d => xScale(d.name) + this.margin.left)
             .attr("y", d => d.money < 0 ? yScale(d.money) + this.margin.top : yScale(0) + this.margin.top)
             .attr("width", xScale.bandwidth())
-            .attr("height", d => d.money < 0 ? yScale(0) - yScale(d.money) + this.margin.top : yScale(d.money) - yScale(0))
+            .attr("height", d => d.money < 0 ? yScale(0) - yScale(d.money)  : yScale(d.money) - yScale(0))
             .attr("fill", d => d.team == "home" ? "#66ff66" : "steelblue")
+            .attr("stroke", "black")
+            .attr("stroke-width", 1.5)
     }
     //takes in home team data and  away team data and draws the bar chart
     drawchartSpread(home, away) {
@@ -237,6 +239,8 @@ class BarChart {
             .attr("width", 15)
             .attr("height", 15)
             .attr("fill", "#66ff66")
+            .attr("stroke", "black")
+            .attr("stroke-width", 1.5)
 
         //away
         d3.
@@ -247,6 +251,7 @@ class BarChart {
             .attr("y", 75)
             .style("font", "15px times")
             .style('fill', 'black')
+            
 
         d3.
             select("#BarChartAwayRect")
@@ -256,6 +261,8 @@ class BarChart {
             .attr("width", 15)
             .attr("height", 15)
             .attr("fill", "steelblue")
+            .attr("stroke", "black")
+            .attr("stroke-width", 1.5)
 
         //yScale
 
@@ -303,8 +310,10 @@ class BarChart {
             .attr("x", d => xScale(d.name) + this.margin.left)
             .attr("y", d => d.spread < 0 ? yScale(d.spread) + this.margin.top : yScale(0) + this.margin.top)
             .attr("width", xScale.bandwidth())
-            .attr("height", d => d.spread < 0 ? yScale(0) - yScale(d.spread) + this.margin.top : yScale(d.spread) - yScale(0))
+            .attr("height", d => d.spread < 0 ? yScale(0) - yScale(d.spread) : yScale(d.spread) - yScale(0))
             .attr("fill", d => d.team == "home" ? "#66ff66" : "steelblue")
+            .attr("stroke", "black")
+            .attr("stroke-width", 1.5)
 
     }
 }
