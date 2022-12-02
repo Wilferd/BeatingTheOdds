@@ -46,7 +46,8 @@ class LineChart {
 
         selection.append('text')
             .text('Correctly Predicted')
-            .attr('transform', `translate( ${startingImageX + 40}, 35)`);
+            .attr('transform', `translate( ${startingImageX + 40}, 35)`)
+            .style('font-size', '18');
 
         const secondImageX = startingImageX + 200;
             selection.append('image')
@@ -65,7 +66,8 @@ class LineChart {
 
         selection.append('text')
             .text('Incorrectly Predicted')
-            .attr('transform', `translate( ${secondImageX + 40}, 35)`);
+            .attr('transform', `translate( ${secondImageX + 40}, 35)`)
+            .style('font-size', '18');
 
     }
     /**
@@ -253,7 +255,7 @@ class LineChart {
     createLineChart(key, data, lineColorScale) {
         data = this.handleDateFiltering(key, data, lineColorScale);
 
-        let padding = { left: 80, bottom: 140, right: 200 };
+        let padding = { left: 100, bottom: 140, right: 200 };
 
         const { xAxis, yAxis } = this.createAxes(data, padding, key);
 
@@ -365,14 +367,8 @@ class LineChart {
             .style("text-anchor", "end")
             .attr("dx", "-.8em")
             .attr("dy", ".15em")
-            .attr("transform", "rotate(-65)");
-
-        // Append x axis text
-        d3
-            .select('#line-chart')
-            .append('text')
-            .text('Date')
-            .attr('transform', `translate( ${375 + padding.left}, ${HEIGHT - padding.bottom + 70})`);
+            .attr("transform", "rotate(-65)")
+            .style('font-size', '18');
 
 
         //plot the average ML on Y-axis
@@ -384,7 +380,8 @@ class LineChart {
             .nice();
         d3.select('#y-axis')
             .attr('transform', `translate(${padding.left},0)`)
-            .call(d3.axisLeft(yAxis));
+            .call(d3.axisLeft(yAxis))
+            .style('font-size', '18');;
 
 
         // Append y axis text
@@ -394,7 +391,8 @@ class LineChart {
             .text('Average Money Line')
             .attr('x', -285)
             .attr('y', 20)
-            .attr('transform', 'rotate(-90)');
+            .attr('transform', 'rotate(-90)')
+            .style('font-size', '18');
         return { xAxis, yAxis };
     }
 
