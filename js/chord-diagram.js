@@ -3,6 +3,7 @@ class ChordDiagram {
         this.state =
         {
             selectedTeam: "Utah",
+            shuffle: false
         }
         this.loadedData = loadedData;
         this.teams = [];
@@ -48,6 +49,10 @@ class ChordDiagram {
             this.assignPositions()
             this.update()
         })
+
+        d3.select("#shuffle-effect-switch").on("click", ()=>{
+            this.state.shuffle = !this.state.shuffle;
+        })
     }
 
     update(){
@@ -61,6 +66,7 @@ class ChordDiagram {
             .attr('y2', d => this.teams.filter(d2 => d2.team === d.OppTeam)[0].y)
             .attr("stroke-width", 3)
             .attr("stroke", d=>d.Result === 'W' ? 'green' : 'red')
+            .attr("stroke-linecap", "round")
 
         d3.select('#chord-images')
             .selectAll("image")
@@ -85,7 +91,9 @@ class ChordDiagram {
 
         if(this.state.selectedTeam){
             let team = JSON.parse(JSON.stringify(this.teams.filter(d => d.team === this.state.selectedTeam)[0]))
-            this.shuffleArray(this.teams)
+            if(this.state.shuffle){
+                this.shuffleArray(this.teams)
+            }
             this.teams = this.teams.filter(d => d.team !== this.state.selectedTeam)
             this.teams.splice(0, 0, team)
         }
@@ -104,7 +112,7 @@ class ChordDiagram {
     }
 
     calculateWins(){
-
+        
     }
 
     shuffleArray(array) {

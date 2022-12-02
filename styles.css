@@ -23,6 +23,13 @@
     background-color: #4CAF50;
 }
 
+#chord-diagram-control-container{
+    /* width: 500px;
+    height: 500px; */
+    /* float: right; */
+    margin-left: 65%;
+}
+
 #predictionButtons{
     margin: 15px;
 }
