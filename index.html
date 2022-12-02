@@ -7,9 +7,14 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link rel="stylesheet" href="styles.css" />
     <script src="js/bar-chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-delaunay@6"></script>
     <script src="js/line-chart.js"></script>
     <script src="js/chord-diagram.js"></script>
     <script src="js/script.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
@@ -24,8 +29,43 @@
 
 
     <div id="content">
-        <div id="teamButtons">
-            <!-- <input type="image" id="mToggle" class="right" width="64" height="64" value="" /> -->
+        <div id="teamButtons"></div>
+        <div id="predictionButtons" style="display: flex;">
+            <div id="switch1" class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                <label class="form-check-label" for="flexSwitchCheckDefault">
+                    <p class="lead">
+                        Most Mispredicted
+                    </p>
+                </label>
+            </div>
+            <div id="switch2" class="form-check form-switch" style="margin-left: 20px;">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault2">
+                <label class="form-check-label" for="flexSwitchCheckDefault">
+                    <p class="lead">
+                        Most Correctly Predicted
+                    </p>
+                </label>
+            </div>
+            <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-left: 40px;"/>
+        </div>
+        <div id="line-chart-key">
+            <h3 style="margin-left: 20%;">NBA Game Predictions using Vegas Odds</h3>
+            <svg id="key-svg"></svg>
+        </div>
+        <div id="bar-chart-radios">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1">
+                    Money Line
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                <label class="form-check-label" for="flexRadioDefault2">
+                    Line Spread
+                </label>
+            </div>
         </div>
         <svg id="line-chart">
             <g id="x-axis"></g>
@@ -33,16 +73,64 @@
             <g id="lines"></g>
             <g id="dots"></g>
             <g id="border"></g>
+            <g id="voronoi"></g>
         </svg>
         <svg id="bar-chart" width="500" height="500">
+            <g id="bar-chart-info">
+                <text id="BarChartTitle"></text>
+                <text id="BarChartHome"></text>
+                <rect id="BarChartHomeRect"></rect>
+                <text id="BarChartAway"></text>
+                <rect id="BarChartAwayRect"></rect>
+            </g>
             <g id="bar-y-axis"></g>
             <g id="bar-x-axis"></g>
             <g id="bar-line"></g>
             <g id="bar-chart-rects"></g>
         </svg>
+        <div id="chord-diagram-control-container">
+            <h3>Settings for Chord Diagram</h3>
+            <hr/>
+            <div id="shuffle-effect-switch" class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="shuffle-effect-switch-flex">
+                <label class="form-check-label" for="shuffle-effect-switch-flex">
+                    <p class="lead">
+                        Shuffle Teams (animation)
+                    </p>
+                </label>
+            </div>
+            <hr/>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="chord" id="wins-radio-button"checked>
+                <label class="form-check-label" for="wins-radio-button">
+                    Wins
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="chord" id="spread-radio-button" >
+                <label class="form-check-label" for="spread-radio-button">
+                    Covered Spread
+                </label>
+            </div>
+            <hr/>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="chord" id="most-spread-radio-button" >
+                <label class="form-check-label" for="most-spread-radio-button">
+                    Covered Most Spread
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="chord" id="least-spread-radio-button" >
+                <label class="form-check-label" for="least-spread-radio-button">
+                    Covered Least Spread
+                </label>
+            </div>
+        </div>
         <svg id="chord-diagram">
             <g id="chord-images"></g>
+            <g id="chord-lines"></g>
         </svg>
-    </div </body>
+    </div 
+</body>
 
 </html>

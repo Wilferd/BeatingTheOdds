@@ -1,14 +1,23 @@
 #chord-diagram {
-    height: 800px;
-    width: 800px;
+    height: 700px;
+    width: 700px;
     display: block;
     margin: auto;
+}
+
+#bar-chart-radios{
+    position:absolute;
+    top:65%;
+    left:65%;
+}
+
+#chord-images {
+    cursor: pointer;
 }
 
 #teamButtons{
     width: 1000px;
     overflow-y: auto;
-
 }
 
 #teamButtons > input{
@@ -19,9 +28,26 @@
     background-color: #4CAF50;
 }
 
+#chord-diagram-control-container{
+    position: absolute;
+    top:150%;
+    left:10%;
+    width: fit-content;
+    height: fit-content;
+}
+
+#predictionButtons{
+    margin: 15px;
+}
+
+#key-svg{
+    width: 500px;
+    height: 50px;
+}
+
 #line-chart {
     width: 1250px;
-    height: 2000px;
+    height: 750px;
 }
 
 #bar-chart {
