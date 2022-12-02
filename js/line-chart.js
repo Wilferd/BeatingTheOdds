@@ -1,6 +1,9 @@
 const WIDTH = 1361
 const HEIGHT = 750
 const RADIUS = 100
+const IMAGE_WIDTH = 30
+const IMAGE_HEIGHT = 36
+
 class LineChart {
 
 
@@ -8,7 +11,7 @@ class LineChart {
         let key = 'Average_Line_ML';
         this.BC = BC;
         let teamData = d3.group(data, d => d.Team)
-        let lineColorScale = d3.scaleOrdinal(d3.schemeTableau10).domain(teamData.keys());
+        let lineColorScale = d3.scaleOrdinal(d3.schemeDark2).domain(teamData.keys());
         let dates = data.map((row) => {
             return new Date(row.Date);
         });
@@ -25,22 +28,21 @@ class LineChart {
 
     createKey() {
         let selection = d3.select("#key-svg");
-        const imageWidth = 20;
-        const imageHeight = 24;
+      
         const startingImageX = 80;
         selection.append('image')
             .attr('x', startingImageX)
             .attr('y', 20)
-            .attr('width', imageWidth)
-            .attr('height', imageHeight)
+            .attr('width', IMAGE_WIDTH)
+            .attr('height', IMAGE_HEIGHT)
             .attr("xlink:href", d => `logos/ball.png`);
 
         selection.append('rect')
             .attr('class', 'image-border-correct')
             .attr('x', startingImageX)
             .attr('y', 20)
-            .attr('width', imageWidth)
-            .attr('height', imageHeight);
+            .attr('width', IMAGE_WIDTH)
+            .attr('height', IMAGE_HEIGHT);
 
         selection.append('text')
             .text('Correctly Predicted')
@@ -50,16 +52,16 @@ class LineChart {
             selection.append('image')
             .attr('x', secondImageX)
             .attr('y', 20)
-            .attr('width', imageWidth)
-            .attr('height', imageHeight)
+            .attr('width', IMAGE_WIDTH)
+            .attr('height', IMAGE_HEIGHT)
             .attr("xlink:href", d => `logos/ball.png`);
 
         selection.append('rect')
             .attr('class', 'image-border-wrong')
             .attr('x', secondImageX)
             .attr('y', 20)
-            .attr('width', imageWidth)
-            .attr('height', imageHeight);
+            .attr('width', IMAGE_WIDTH)
+            .attr('height', IMAGE_HEIGHT);
 
         selection.append('text')
             .text('Incorrectly Predicted')
@@ -258,12 +260,9 @@ class LineChart {
 
         let teamData = d3.group(data, d => d.Team)
         this.createLines(teamData, lineColorScale, xAxis, key, yAxis);
-
-        const imageWidth = 20;
-        const imageHeight = 24;
-        this.createDots(data, xAxis, imageWidth, key, yAxis, imageHeight);
-        this.createBorder(data, key, xAxis, imageWidth, yAxis, imageHeight);
-        this.voronoi(data, xAxis, imageWidth, key, yAxis, imageHeight);
+        this.createDots(data, xAxis, key, yAxis);
+        this.createBorder(data, key, xAxis, yAxis);
+        this.voronoi(data, xAxis, key, yAxis);
 
     }
 
@@ -306,15 +305,16 @@ class LineChart {
      * @param {*} data 
      * @param {*} key 
      * @param {*} xAxis 
-     * @param {*} imageWidth 
+     * @param {*} IMAGE_WIDTH 
      * @param {*} yAxis 
-     * @param {*} imageHeight 
+     * @param {*} IMAGE_HEIGHT 
      */
-    createBorder(data, key, xAxis, imageWidth, yAxis, imageHeight) {
+    createBorder(data, key, xAxis, yAxis) {
+        let circleRadius = Math.sqrt(Math.pow(IMAGE_WIDTH/2, 2) + Math.pow(IMAGE_HEIGHT/2, 2)) - 2.5;
         d3.select('#border')
-            .selectAll('rect')
+            .selectAll('circle')
             .data(data)
-            .join('rect')
+            .join('circle')
             .transition()
             .duration(2000)
             .attr('class', d => {
@@ -329,16 +329,15 @@ class LineChart {
                 return 'image-border-wrong';
 
             })
-            .attr('x', d => xAxis(new Date(d.Date)) - imageWidth / 2)
-            .attr('y', d => {
+            .attr('cx', d => xAxis(new Date(d.Date)) /*- IMAGE_WIDTH / 2*/)
+            .attr('cy', d => {
                 let odds = parseFloat(d[key]);
                 if (isNaN(odds)) {
                     return yAxis(0);
                 }
-                return yAxis(odds) - imageHeight / 2;
+                return yAxis(odds) /*- IMAGE_HEIGHT / 2*/;
             })
-            .attr('width', imageWidth)
-            .attr('height', imageHeight);
+            .attr('r', circleRadius)
     }
 
     /**
@@ -405,21 +404,21 @@ class LineChart {
      * Follows this tutorial: https://observablehq.com/@martgnz/distance-limited-interaction-with-d3-delaunay
      * @param {*} data 
      * @param {*} xAxis 
-     * @param {*} imageWidth 
+     * @param {*} IMAGE_WIDTH 
      * @param {*} key 
      * @param {*} yAxis 
-     * @param {*} imageHeight 
+     * @param {*} IMAGE_HEIGHT 
      */
-    voronoi(data, xAxis, imageWidth, key, yAxis, imageHeight) {
+    voronoi(data, xAxis, key, yAxis) {
         const delaunay = d3.Delaunay.from(
             data,
-            d => xAxis(new Date(d.Date)) - imageWidth / 2,
+            d => xAxis(new Date(d.Date)) - IMAGE_WIDTH / 2,
             d => {
                 let odds = parseFloat(d[key]);
                 if (isNaN(odds)) {
                     return yAxis(0);
                 }
-                return yAxis(odds) - imageHeight / 2;
+                return yAxis(odds) - IMAGE_HEIGHT / 2;
             });
 
 
@@ -479,10 +478,10 @@ class LineChart {
                 .style('position', 'absolute')
                 .style(
                     'left',
-                    `${xAxis(new Date(hover.Date)) - imageWidth / 2}px`
+                    `${xAxis(new Date(hover.Date)) - IMAGE_WIDTH / 2}px`
                 )
                 .style('background', 'rgba(255,255,255,0.8)')
-                .style('top', `${350 + yAxis(parseFloat(hover[key])) - imageHeight / 2}px`)
+                .style('top', `${350 + yAxis(parseFloat(hover[key])) - IMAGE_HEIGHT / 2}px`)
                 .html(`<div>
                  <strong>Team</strong>: ${hover.Team} <br>
                  <strong>Opponent</strong>: ${hover.OppTeam} <br>
@@ -527,12 +526,12 @@ class LineChart {
      * Creates line chart dots corresponding to each team in the data
      * @param {*} data 
      * @param {*} xAxis 
-     * @param {*} imageWidth 
+     * @param {*} IMAGE_WIDTH 
      * @param {*} key 
      * @param {*} yAxis 
-     * @param {*} imageHeight 
+     * @param {*} IMAGE_HEIGHT 
      */
-    createDots(data, xAxis, imageWidth, key, yAxis, imageHeight) {
+    createDots(data, xAxis, key, yAxis) {
         let outerContext = this;
         d3.select('#dots')
             .selectAll("image")
@@ -541,16 +540,16 @@ class LineChart {
             .transition()
             .duration(2000)
             .attr('id', (d) => 'game' + d.GameId)
-            .attr('x', d => xAxis(new Date(d.Date)) - imageWidth / 2)
+            .attr('x', d => xAxis(new Date(d.Date)) - IMAGE_WIDTH / 2)
             .attr('y', d => {
                 let odds = parseFloat(d[key]);
                 if (isNaN(odds)) {
                     return yAxis(0);
                 }
-                return yAxis(odds) - imageHeight / 2;
+                return yAxis(odds) - IMAGE_HEIGHT / 2;
             })
-            .attr('width', imageWidth)
-            .attr('height', imageHeight)
+            .attr('width', IMAGE_WIDTH)
+            .attr('height', IMAGE_HEIGHT)
             .attr("xlink:href", d => `logos/${d.Team}.png`);
             
     }
