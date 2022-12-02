@@ -1,5 +1,5 @@
 const WIDTH = 1250
-const HEIGHT = 2000
+const HEIGHT = 750
 const RADIUS = 100
 class LineChart {
 
@@ -8,10 +8,63 @@ class LineChart {
         let key = 'Average_Line_ML';
         let teamData = d3.group(data, d => d.Team)
         let lineColorScale = d3.scaleOrdinal(d3.schemeTableau10).domain(teamData.keys());
-        this.setUp(key, data, lineColorScale);
+        let dates = data.map((row) => {
+            return new Date(row.Date);
+        });
+        this.dateStart = d3.min(dates);
+        this.dateEnd = d3.max(dates);
 
+        this.originalStart = this.dateStart;
+        this.originalEnd = this.dateEnd;
+
+        this.originalData = data;
+        this.setUp(key, data, lineColorScale);
+        this.createKey();
     }
 
+    createKey() {
+        let selection = d3.select("#key-svg");
+        const imageWidth = 20;
+        const imageHeight = 24;
+        const startingImageX = 80;
+        selection.append('image')
+            .attr('x', startingImageX)
+            .attr('y', 20)
+            .attr('width', imageWidth)
+            .attr('height', imageHeight)
+            .attr("xlink:href", d => `logos/ball.png`);
+
+        selection.append('rect')
+            .attr('class', 'image-border-correct')
+            .attr('x', startingImageX)
+            .attr('y', 20)
+            .attr('width', imageWidth)
+            .attr('height', imageHeight);
+
+        selection.append('text')
+            .text('Correctly Predicted')
+            .attr('transform', `translate( ${startingImageX + 40}, 35)`);
+
+        const secondImageX = startingImageX + 200;
+            selection.append('image')
+            .attr('x', secondImageX)
+            .attr('y', 20)
+            .attr('width', imageWidth)
+            .attr('height', imageHeight)
+            .attr("xlink:href", d => `logos/ball.png`);
+
+        selection.append('rect')
+            .attr('class', 'image-border-wrong')
+            .attr('x', secondImageX)
+            .attr('y', 20)
+            .attr('width', imageWidth)
+            .attr('height', imageHeight);
+
+        selection.append('text')
+            .text('Incorrectly Predicted')
+            .attr('transform', `translate( ${secondImageX + 40}, 35)`);
+
+    }
     /**
      * Creates the team buttons
      * @param {*} key 
@@ -60,7 +113,8 @@ class LineChart {
                 this.createLineChart(key, filteredTeams, lineColorScale)
             });
 
-        this.createLineChart(key, d3.filter(data, d => nameSet.has(d.Team)), lineColorScale);
+        let teamFiltered = d3.filter(data, d => nameSet.has(d.Team));
+        this.createLineChart(key, teamFiltered, lineColorScale);
 
         let checkSelection = d3.select('#switch1');
         let oldSet = new Set(nameSet);
@@ -77,6 +131,9 @@ class LineChart {
             let checked = d3.select('#flexSwitchCheckDefault').property('checked');
 
             if (checked) {
+                //get the recent date selection
+                data = this.handleDateFiltering(key, data, lineColorScale);
+
                 //find the most mispredicted team(s)
                 let teamData = d3.group(data, d => d.Team);
                 let teamMisprediction = new Map();
@@ -111,6 +168,8 @@ class LineChart {
 
             let checked = d3.select('#flexSwitchCheckDefault2').property('checked');
             if (checked) {
+                //get the recent date selection
+                data = this.handleDateFiltering(key, data, lineColorScale);
                 //find the most correctly predicted team(s)
                 let teamData = d3.group(data, d => d.Team);
                 let teamCorrectPrediction = new Map();
@@ -120,7 +179,7 @@ class LineChart {
                         let prediction = parseFloat(row[key]);
                         if ((prediction < 0 && row.Result === 'W') ||
                             (prediction > 0 && row.Result === 'L')) {
-                                numCorrectlyPredicted++;
+                            numCorrectlyPredicted++;
                         }
                     }
                     teamCorrectPrediction.set(teamGames[0], numCorrectlyPredicted);
@@ -136,12 +195,61 @@ class LineChart {
     }
 
     /**
+     * Uses the data passed in to filter output data based on the calendar date
+     * @param {*} key 
+     * @param {*} data use teams in data to filter even more
+     * @param {*} lineColorScale 
+     * @returns 
+     */
+    handleDateFiltering(key, data, lineColorScale) {
+        //get the teams used by this data
+        //this is hacky
+        let teamNameSet = new Set();
+        for (let row of data) {
+            teamNameSet.add(row.Team);
+        }
+        data = d3.filter(this.originalData, d => teamNameSet.has(d.Team));
+
+        let dates = data.map((row) => {
+            return new Date(row.Date);
+        });
+        let outerContext = this;
+
+        $(function () {
+            $('input[name="daterange"]').daterangepicker({
+                opens: 'left',
+                startDate: this.dateStart,
+                endDate: this.dateEnd,
+                minDate: outerContext.originalStart,
+                maxDate: outerContext.originalEnd
+            }, function (start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                let filtered = d3.filter(data, d => {
+                    let gameDate = new Date(d.Date);
+                    return gameDate >= start && gameDate <= end;
+                });
+
+                //every time date selection happens need to update globally
+                outerContext.dateStart = start;
+                outerContext.dateEnd = end;
+                outerContext.createLineChart(key, filtered, lineColorScale)
+            });
+        });
+
+        return d3.filter(data, d => {
+            let gameDate = new Date(d.Date);
+            return gameDate >= this.dateStart && gameDate <= this.dateEnd;
+        });
+    }
+    /**
      * Creates the line chart with some data
      * @param {*} key Column in data to be used (ex. 'Average_Line_ML')
      * @param {*} data 
      * @param {*} lineColorScale 
      */
     createLineChart(key, data, lineColorScale) {
+        data = this.handleDateFiltering(key, data, lineColorScale);
+
         let padding = { left: 80, bottom: 140, right: 200 };
 
         const { xAxis, yAxis } = this.createAxes(data, padding, key);
@@ -371,7 +479,7 @@ class LineChart {
                     `${xAxis(new Date(hover.Date)) - imageWidth / 2}px`
                 )
                 .style('background', 'rgba(255,255,255,0.8)')
-                .style('top', `${250 + yAxis(parseFloat(hover[key])) - imageHeight / 2}px`)
+                .style('top', `${350 + yAxis(parseFloat(hover[key])) - imageHeight / 2}px`)
                 .html(`<div>
                  <strong>Team</strong>: ${hover.Team} <br>
                  <strong>Opponent</strong>: ${hover.OppTeam} <br>
