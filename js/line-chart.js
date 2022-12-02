@@ -1,4 +1,4 @@
-const WIDTH = 1250
+const WIDTH = 1361
 const HEIGHT = 750
 const RADIUS = 100
 class LineChart {
