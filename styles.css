@@ -24,7 +24,9 @@
 }
 
 #chord-diagram-control-container{
-    margin-left: 65%;
+    margin-left: 42%;
+    width: fit-content;
+    height: fit-content;
 }
 
 #predictionButtons{
