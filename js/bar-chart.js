@@ -1,7 +1,7 @@
 class BarChart {
     constructor(loadedData) {
         this.loadedData = loadedData;
-        this.margin = { left: 40, right: 50, top: 25, bottom: 25 }
+        this.margin = { left: 60, right: 50, top: 25, bottom: 25 }
 
         this.currHome = this.loadedData[1]
         this.currAway = this.loadedData[0] 
@@ -159,16 +159,18 @@ class BarChart {
 
         d3.select("#bar-y-axis")
             .call(d3.axisLeft(yScale))
-            .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+            .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
+            .style("font-size", "18")
 
         var xScale = d3.scaleBand()
             .domain(siteNames)
-            .range([0, 475])
+            .range([0, 450])
             .padding(0.4)
 
         d3.select("#bar-x-axis")
             .call(d3.axisBottom(xScale))
             .attr('transform', `translate(${this.margin.left}, ${475 - this.margin.top})`)
+            .style("font-size", "18")
 
         d3.select("#bar-line")
             .selectAll("line")
@@ -301,20 +303,21 @@ class BarChart {
 
         d3.select("#bar-y-axis")
             .call(d3.axisLeft(yScale))
-            .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+            .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
+            .style("font-size", "18")
 
 
         //xScale and x-axis
 
         var xScale = d3.scaleBand()
             .domain(siteNames)
-            .range([0, 475])
+            .range([0, 450])
             .padding(0.4)
 
         d3.select("#bar-x-axis")
             .call(d3.axisBottom(xScale))
             .attr('transform', `translate(${this.margin.left}, ${475 - this.margin.top})`) //${yScale(0) + this.margin.top}
-
+            .style("font-size", "18")
         //middle line of bar
         d3.select("#bar-line")
             .selectAll("line")
