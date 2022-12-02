@@ -1,4 +1,4 @@
-const WIDTH = 1361
+const WIDTH = 1250
 const HEIGHT = 750
 const RADIUS = 100
 const IMAGE_WIDTH = 30
@@ -228,7 +228,6 @@ class LineChart {
                 minDate: outerContext.originalStart,
                 maxDate: outerContext.originalEnd
             }, function (start, end, label) {
-                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
                 let filtered = d3.filter(data, d => {
                     let gameDate = new Date(d.Date);
                     return gameDate >= start && gameDate <= end;

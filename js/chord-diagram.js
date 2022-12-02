@@ -13,7 +13,7 @@ class ChordDiagram {
 
         this.teams.forEach(team => team.groupedData = d3.group(loadedData, d => d.Team).get(team.team))
         
-        this.winLoseColorScale = d3.scaleSequential()
+        this.colorScale = d3.scaleSequential()
             .domain([0,1])
             .interpolator(d3.interpolate("lightcoral", "lightgreen"));
 
@@ -43,6 +43,45 @@ class ChordDiagram {
             .attr('height', this.imageHeight)
             .attr("xlink:href", d => `logos/${d.team}.png`)
 
+        let minColor = this.colorScale(0);
+        let midColor = this.colorScale(.5);
+        let maxColor = this.colorScale(1);
+    
+            
+        let linearGradient = 
+            d3.select("#chord-legend")
+                .append("defs")
+                .append("linearGradient")
+                .attr("id", "color-gradient");
+    
+            linearGradient
+                .append("stop")
+                .attr("offset", "0%")
+                .attr("stop-color", `${minColor}`)
+                .style("stop-opacity", "1");
+    
+            linearGradient
+                .append("stop")
+                .attr("offset", "50%")
+                .attr("stop-color", `${midColor}`)
+                .style("stop-opacity", "1");
+    
+            linearGradient
+                .append("stop")
+                .attr("offset", "100%")
+                .attr("stop-color", `${maxColor}`)
+                .style("stop-opacity", "1");
+    
+            d3.select("#chord-legend")
+                .append("g")
+                .attr("id", "chord-legend-area")
+                .append('rect')
+                .attr('width', 150)
+                .attr("height", 20)
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('fill', 'url(#color-gradient)');
+        
         this.update()
 
         d3.select('#chord-images').on("click", (d) => {
@@ -69,12 +108,14 @@ class ChordDiagram {
         d3.select("#least-spread-radio-button").on("click", ()=>{
             this.update()
         })
-        console.log(this.teams)
+    
     }
 
     update(){
         let selectedTeam = this.teams.filter(d => d.team === this.state.selectedTeam)[0]
         if(d3.select("#wins-radio-button").property("checked")){
+            $("#chord-legend-text").html("Wins")
+
             d3.select("#chord-lines")
                 .selectAll("line")
                 .data(selectedTeam["winLoseData"])
@@ -84,10 +125,11 @@ class ChordDiagram {
                 .attr('x2', d => this.teams.filter(d2 => d2.team === d.team)[0].x)
                 .attr('y2', d => this.teams.filter(d2 => d2.team === d.team)[0].y)
                 .attr("stroke-width", 10)
-                .attr("stroke", d=> this.winLoseColorScale(d.wins/d.total)
+                .attr("stroke", d=> this.colorScale(d.wins/d.total)
                 )
                 .attr("stroke-linecap", "round")
         }else if (d3.select("#spread-radio-button").property("checked")) {
+            $("#chord-legend-text").html("Spread Covering")
             d3.select("#chord-lines")
                 .selectAll("line")
                 .data(selectedTeam["spreadData"])
@@ -97,13 +139,15 @@ class ChordDiagram {
                 .attr('x2', d => this.teams.filter(d2 => d2.team === d.team)[0].x)
                 .attr('y2', d => this.teams.filter(d2 => d2.team === d.team)[0].y)
                 .attr("stroke-width", 10)
-                .attr("stroke", d=> this.winLoseColorScale(d.covered/d.total)
+                .attr("stroke", d=> this.colorScale(d.covered/d.total)
                 )
                 .attr("stroke-linecap", "round")
         }else if(d3.select("#most-spread-radio-button").property("checked")){
+            $("#chord-legend-text").html("Most Spread Covering")
             this.leastOrMostSpread(false)
 
         }else if(d3.select("#least-spread-radio-button").property("checked")){
+            $("#chord-legend-text").html("Least Spread Covering")
             this.leastOrMostSpread(true)
         }
         this.drawImages()
@@ -136,7 +180,7 @@ class ChordDiagram {
             .attr('x2', d => this.teams.filter(d2 => d2.team === d.team)[0].x)
             .attr('y2', d => this.teams.filter(d2 => d2.team === d.team)[0].y)
             .attr("stroke-width", 10)
-            .attr("stroke", d=> this.winLoseColorScale(d.covered/d.total)
+            .attr("stroke", d=> this.colorScale(d.covered/d.total)
             )
             .attr("stroke-linecap", "round")
     }

@@ -6,10 +6,9 @@ class BarChart {
         this.currHome = this.loadedData[1]
         this.currAway = this.loadedData[0] 
 
-        console.log(d3.select("#flexRadioDefault2").property("checked"))
 
         this.drawchart(this.loadedData[1])
-
+        
         d3.select("#flexRadioDefault1").on('click', (d) => {
             console.log("click")
             if (d3.select("#flexRadioDefault1").property("checked")) {
@@ -35,7 +34,6 @@ class BarChart {
     }
 
     drawchart(game) {
-        //console.log(d3.select("#flexRadioDefault2").property("checked"))
         let data = d3.filter(this.loadedData, d => d.GameId === game.GameId)
 
         var other = data[0]
