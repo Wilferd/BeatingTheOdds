@@ -11,11 +11,11 @@ class ChordDiagram {
         loadedData.forEach(game => this.teamNames.add(game.Team));
         this.teamNames.forEach(team => this.teams.push({team: team}));
 
-        this.teams.forEach(team => team.data = d3.group(loadedData, d => d.Team).get(team.team))
+        this.teams.forEach(team => team.groupedData = d3.group(loadedData, d => d.Team).get(team.team))
         
-        var winLoseColorScale = d3.scaleOrdinal()
-            .domain([0,4])
-            .range(["red","green"]);
+        this.winLoseColorScale = d3.scaleSequential()
+            .domain([0,1])
+            .interpolator(d3.interpolate("lightcoral", "lightgreen"));
 
         this.imageWidth = 60;
         this.imageHeight = 60;
@@ -30,6 +30,7 @@ class ChordDiagram {
         this.innerRadius = this.radius - 120;
 
         this.assignPositions()
+        this.calculateWins()
 
         d3.select('#chord-images')
             .selectAll("image")
@@ -51,21 +52,25 @@ class ChordDiagram {
         })
 
         d3.select("#shuffle-effect-switch").on("click", ()=>{
-            this.state.shuffle = !this.state.shuffle;
+            let checked = d3.select('#shuffle-effect-switch-flex').property('checked');
+            this.state.shuffle = checked;
         })
     }
 
     update(){
+
+        let selectedTeam = this.teams.filter(d => d.team === this.state.selectedTeam)[0]
         d3.select("#chord-lines")
             .selectAll("line")
-            .data(this.teams.filter(d => d.team === this.state.selectedTeam)[0].data)
+            .data(selectedTeam["winLoseData"])
             .join('line')
-            .attr('x1', d => this.teams.filter(d2 => d2.team === d.Team)[0].x)
-            .attr('y1', d => this.teams.filter(d2 => d2.team === d.Team)[0].y)
-            .attr('x2', d => this.teams.filter(d2 => d2.team === d.OppTeam)[0].x)
-            .attr('y2', d => this.teams.filter(d2 => d2.team === d.OppTeam)[0].y)
-            .attr("stroke-width", 3)
-            .attr("stroke", d=>d.Result === 'W' ? 'green' : 'red')
+            .attr('x1', selectedTeam.x)
+            .attr('y1', selectedTeam.y)
+            .attr('x2', d => this.teams.filter(d2 => d2.team === d.team)[0].x)
+            .attr('y2', d => this.teams.filter(d2 => d2.team === d.team)[0].y)
+            .attr("stroke-width", 10)
+            .attr("stroke", d=> this.winLoseColorScale(d.wins/d.total)
+            )
             .attr("stroke-linecap", "round")
 
         d3.select('#chord-images')
@@ -112,7 +117,27 @@ class ChordDiagram {
     }
 
     calculateWins(){
-        
+        this.teams.forEach(team => {
+            team.winLoseData = []
+            
+            this.teams.forEach(t => {
+                var winLoseObj = {};
+                winLoseObj["team"] = t.team;
+                winLoseObj["wins"] = 0;
+                winLoseObj["total"] = 0;
+                team.winLoseData.push(winLoseObj)
+            })
+
+            team.groupedData.forEach(game => {
+                var winLoseObj = team.winLoseData.filter(d => d.team === game.OppTeam)[0]
+                if(game.Result === 'W'){
+                    winLoseObj.wins += 1
+                }
+                winLoseObj.total += 1
+            }
+            )
+        })
+        console.log(this.teams)
     }
 
     shuffleArray(array) {
