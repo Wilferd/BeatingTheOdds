@@ -15,9 +15,20 @@
     cursor: pointer;
 }
 
+#title{
+    text-align:center;
+}
+
+html *
+{
+   font-family: Century Gothic !important;
+}
 #teamButtons{
     width: 1000px;
     overflow-y: auto;
+    border: 2px solid black;
+    border-radius: 10px;
+    margin-left:80px;
 }
 
 #teamButtons > input{
@@ -37,7 +48,8 @@
 }
 
 #predictionButtons{
-    margin: 15px;
+    margin-left: 80px;
+
 }
 
 #key-svg{
@@ -46,7 +58,7 @@
 }
 
 #line-chart {
-    width: 1250px;
+    width: 1361px;
     height: 750px;
 }
 
@@ -86,4 +98,7 @@
     background-size: contain;
     background-repeat: no-repeat;
 
+}
+body {
+    background-color: black;
 }
