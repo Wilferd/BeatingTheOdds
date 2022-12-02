@@ -4,8 +4,9 @@ const RADIUS = 100
 class LineChart {
 
 
-    constructor(data) {
+    constructor(data, BC) {
         let key = 'Average_Line_ML';
+        this.BC = BC;
         let teamData = d3.group(data, d => d.Team)
         let lineColorScale = d3.scaleOrdinal(d3.schemeTableau10).domain(teamData.keys());
         let dates = data.map((row) => {
@@ -446,6 +447,7 @@ class LineChart {
                 .attr('display', 'default')
         };
 
+        let outerContext = this;
         const mousemoved = (e) => {
             let [mx, my] = d3.pointer(e);
             find = (mx, my) => {
@@ -463,6 +465,7 @@ class LineChart {
             if (!hover)
                 return mouseleft();
 
+            this.BC.drawchart(hover);
             let prediction = parseFloat(hover[key]);
             let color = "red";
             let predictionText = 'Incorrect';
@@ -530,6 +533,7 @@ class LineChart {
      * @param {*} imageHeight 
      */
     createDots(data, xAxis, imageWidth, key, yAxis, imageHeight) {
+        let outerContext = this;
         d3.select('#dots')
             .selectAll("image")
             .data(data)
@@ -548,6 +552,7 @@ class LineChart {
             .attr('width', imageWidth)
             .attr('height', imageHeight)
             .attr("xlink:href", d => `logos/${d.Team}.png`);
+            
     }
 
     /**
