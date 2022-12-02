@@ -1,11 +1,35 @@
 class BarChart {
     constructor(loadedData) {
         this.loadedData = loadedData;
-        this.margin = { left: 40, right: 50, top: 25, bottom: 25 }
+        this.margin = { left: 60, right: 50, top: 25, bottom: 25 }
 
-        this.drawchart(this.loadedData[6])
+        this.currHome = this.loadedData[1]
+        this.currAway = this.loadedData[0] 
 
-        //this.drawchartMoney(this.loadedData[1], this.loadedData[0])
+
+        this.drawchart(this.loadedData[1])
+        
+        d3.select("#flexRadioDefault1").on('click', (d) => {
+            console.log("click")
+            if (d3.select("#flexRadioDefault1").property("checked")) {
+                this.drawchartMoney(this.currHome, this.currAway)
+            }
+            else {
+                this.drawchartSpread(this.currHome, this.currAway)
+            }
+        });
+
+        d3.select("#flexRadioDefault2").on('click', (d) => {
+            console.log("click2")
+            if (d3.select("#flexRadioDefault2").property("checked")) {
+                this.drawchartSpread(this.currHome, this.currAway)
+            }
+            else {
+                this.drawchartMoney(this.currHome, this.currAway)
+            }
+        });
+
+        
 
     }
 
@@ -29,6 +53,9 @@ class BarChart {
             home = other
             away = game
         }
+
+        this.currHome = home
+        this.currAway = away
 
         if (d3.select("#flexRadioDefault2").property("checked")) {
             this.drawchartSpread(home, away)
@@ -78,8 +105,8 @@ class BarChart {
         svgBar
             .select("#BarChartTitle")
             .join('text')
-            .text("Single Game Money Line")
-            .attr("x", 140)
+            .text("Money Line")
+            .attr("x", 170)
             .attr("y", 50)
             .style("font", "30px times")
 
@@ -130,16 +157,18 @@ class BarChart {
 
         d3.select("#bar-y-axis")
             .call(d3.axisLeft(yScale))
-            .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+            .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
+            .style("font-size", "18")
 
         var xScale = d3.scaleBand()
             .domain(siteNames)
-            .range([0, 475])
+            .range([0, 450])
             .padding(0.4)
 
         d3.select("#bar-x-axis")
             .call(d3.axisBottom(xScale))
             .attr('transform', `translate(${this.margin.left}, ${475 - this.margin.top})`)
+            .style("font-size", "18")
 
         d3.select("#bar-line")
             .selectAll("line")
@@ -212,8 +241,8 @@ class BarChart {
         svgBar
             .select("#BarChartTitle")
             .join('text')
-            .text("Single Game Spread")
-            .attr("x", 140)
+            .text("Line Spread")
+            .attr("x", 170)
             .attr("y", 50)
             .style("font", "30px times")
 
@@ -272,20 +301,21 @@ class BarChart {
 
         d3.select("#bar-y-axis")
             .call(d3.axisLeft(yScale))
-            .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+            .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
+            .style("font-size", "18")
 
 
         //xScale and x-axis
 
         var xScale = d3.scaleBand()
             .domain(siteNames)
-            .range([0, 475])
+            .range([0, 450])
             .padding(0.4)
 
         d3.select("#bar-x-axis")
             .call(d3.axisBottom(xScale))
             .attr('transform', `translate(${this.margin.left}, ${475 - this.margin.top})`) //${yScale(0) + this.margin.top}
-
+            .style("font-size", "18")
         //middle line of bar
         d3.select("#bar-line")
             .selectAll("line")
