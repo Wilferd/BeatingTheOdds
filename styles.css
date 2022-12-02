@@ -11,30 +11,44 @@
     left:65%;
 }
 
+#chord-legend{
+    border : 1px solid black;
+    width:150px;
+    height:20px;
+    margin-left: 100px;
+}
+
 #chord-images {
     cursor: pointer;
 }
 
+#chord-story-telling{
+    position:absolute;
+    top:150%;
+    left:71%;
+    font-size: 20px;
+}
+
 #title{
-    text-align:center;
+    text-align:center;    
 }
 
 html *
 {
     font-family: Century Gothic !important;
 }
+
 #teamButtons{
-    width: 1000px;
+    width: 944px;
     overflow-y: auto;
     border: 2px solid black;
     border-radius: 10px;
-    margin-left:80px;
+    margin: auto;
 }
 
 #teamButtons > input{
     width: 64px;
     height: 64px;
-    float: left;
     margin: 15px;
     background-color: #4CAF50;
 }
@@ -48,8 +62,7 @@ html *
 }
 
 #predictionButtons{
-    margin-left: 80px;
-
+    margin-left:570px;
 }
 
 #key-svg{

@@ -5,7 +5,6 @@ async function loadData() {
 
 loadData().then((loadedData) => {
     document.body.style.zoom = "67%";
-    console.log(loadedData)
     const BC = new BarChart(loadedData);
     const lineView = new LineChart(loadedData, BC);
     const chord = new ChordDiagram(loadedData);

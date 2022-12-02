@@ -3,8 +3,6 @@ class BarChart {
         this.loadedData = loadedData;
         this.margin = { left: 40, right: 50, top: 25, bottom: 25 }
 
-        console.log(d3.select("#flexRadioDefault2").property("checked"))
-
         this.drawchart(this.loadedData[6])
 
         //this.drawchartMoney(this.loadedData[1], this.loadedData[0])
@@ -12,7 +10,6 @@ class BarChart {
     }
 
     drawchart(game) {
-        //console.log(d3.select("#flexRadioDefault2").property("checked"))
         let data = d3.filter(this.loadedData, d => d.GameId === game.GameId)
 
         var other = data[0]

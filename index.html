@@ -39,6 +39,7 @@
                     </p>
                 </label>
             </div>
+            <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-left: 40px;"/>
             <div id="switch2" class="form-check form-switch" style="margin-left: 20px;">
                 <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault2">
                 <label class="form-check-label" for="flexSwitchCheckDefault">
@@ -47,7 +48,6 @@
                     </p>
                 </label>
             </div>
-            <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-left: 40px;"/>
         </div>
         <div id="line-chart-key">
             <h3 style="margin-left: 20%;">NBA Game Predictions using Vegas Odds</h3>
@@ -89,7 +89,7 @@
             <g id="bar-chart-rects"></g>
         </svg>
         <div id="chord-diagram-control-container">
-            <h3>Settings for Chord Diagram</h3>
+            <h3>Spoke for Chord Diagram</h3>
             <hr/>
             <div id="shuffle-effect-switch" class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" role="switch" id="shuffle-effect-switch-flex">
@@ -125,11 +125,31 @@
                     Covered Least Spread
                 </label>
             </div>
+            <hr/>
+            <svg id="chord-legend">
+            <p id="chord-legend-text" style="text-align:center"></p>
         </div>
         <svg id="chord-diagram">
             <g id="chord-images"></g>
             <g id="chord-lines"></g>
         </svg>
+        <div id="chord-story-telling">
+            <p>
+                This spoke diagram shows a couple different "head-to-head" data for a selected team.
+                The first one is the wins and once a team is selected, the other spokes show a coral 
+                if the selected team lost all of the match-ups and light green if they won all of the match-ups. Then for the colors
+                inbetween it is interpolated like in the legend.
+            </p>
+            <p>
+                The covered spread option shows if the spread was covered 
+                (either you won more than expected or lost less than expected when it comes to points scored). 
+                Similar to the first one the colors are interpolated.
+            </p>
+            <p>
+                The most spread covered shows the team that covered the spread the most out of all the teams and the least covered shows 
+                the team that covered the spread the least out of all the teams.
+            </p>
+        </div>
     </div 
 </body>
 
