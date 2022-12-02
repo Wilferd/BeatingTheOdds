@@ -31,6 +31,7 @@ class ChordDiagram {
 
         this.assignPositions()
         this.calculateWins()
+        this.calculateSpread()
 
         d3.select('#chord-images')
             .selectAll("image")
@@ -55,23 +56,47 @@ class ChordDiagram {
             let checked = d3.select('#shuffle-effect-switch-flex').property('checked');
             this.state.shuffle = checked;
         })
+
+        d3.select("#wins-radio-button").on("click", ()=>{
+        
+        
+            this.update()})
+
+        d3.select("#spread-radio-button").on("click", ()=>{
+            this.update()
+        })
     }
 
     update(){
 
         let selectedTeam = this.teams.filter(d => d.team === this.state.selectedTeam)[0]
-        d3.select("#chord-lines")
-            .selectAll("line")
-            .data(selectedTeam["winLoseData"])
-            .join('line')
-            .attr('x1', selectedTeam.x)
-            .attr('y1', selectedTeam.y)
-            .attr('x2', d => this.teams.filter(d2 => d2.team === d.team)[0].x)
-            .attr('y2', d => this.teams.filter(d2 => d2.team === d.team)[0].y)
-            .attr("stroke-width", 10)
-            .attr("stroke", d=> this.winLoseColorScale(d.wins/d.total)
-            )
-            .attr("stroke-linecap", "round")
+        if(d3.select("#wins-radio-button").property("checked")){
+            d3.select("#chord-lines")
+                .selectAll("line")
+                .data(selectedTeam["winLoseData"])
+                .join('line')
+                .attr('x1', selectedTeam.x)
+                .attr('y1', selectedTeam.y)
+                .attr('x2', d => this.teams.filter(d2 => d2.team === d.team)[0].x)
+                .attr('y2', d => this.teams.filter(d2 => d2.team === d.team)[0].y)
+                .attr("stroke-width", 10)
+                .attr("stroke", d=> this.winLoseColorScale(d.wins/d.total)
+                )
+                .attr("stroke-linecap", "round")
+        }else if(d3.select("#spread-radio-button").property("checked")){
+            d3.select("#chord-lines")
+                .selectAll("line")
+                .data(selectedTeam["spreadData"])
+                .join('line')
+                .attr('x1', selectedTeam.x)
+                .attr('y1', selectedTeam.y)
+                .attr('x2', d => this.teams.filter(d2 => d2.team === d.team)[0].x)
+                .attr('y2', d => this.teams.filter(d2 => d2.team === d.team)[0].y)
+                .attr("stroke-width", 10)
+                .attr("stroke", d=> this.winLoseColorScale(d.covered/d.total)
+                )
+                .attr("stroke-linecap", "round")
+        }
 
         d3.select('#chord-images')
             .selectAll("image")
@@ -134,6 +159,32 @@ class ChordDiagram {
                     winLoseObj.wins += 1
                 }
                 winLoseObj.total += 1
+            }
+            )
+        })
+        console.log(this.teams)
+    }
+
+    calculateSpread(){
+        this.teams.forEach(team => {
+            team.spreadData = []
+            
+            this.teams.forEach(t => {
+                var spreadObj = {};
+                spreadObj["team"] = t.team;
+                spreadObj["covered"] = 0;
+                spreadObj["total"] = 0;
+                team.spreadData.push(spreadObj)
+            })
+
+            team.groupedData.forEach(game => {
+                var spreadObj = team.spreadData.filter(d => d.team === game.OppTeam)[0]
+                if(game.Result === 'W' && Math.abs(game.Spread) < game.Average_Line_Spread){
+                    spreadObj.covered += 1
+                }else if(game.Spread > Math.abs(game.Average_Line_Spread)){
+                    spreadObj.covered += 1
+                }
+                spreadObj.total += 1
             }
             )
         })
