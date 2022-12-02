@@ -4,13 +4,54 @@ class BarChart {
         this.loadedData = loadedData;
         this.margin = {left: 30, right:50, top: 25, bottom:25}
         
+        console.log(d3.select("#flexRadioDefault2").property("checked"))
 
-        this.drawchartSpread(this.loadedData[1], this.loadedData[0])
+        this.drawchart(this.loadedData[6])
 
         //this.drawchartMoney(this.loadedData[1], this.loadedData[0])
         
     }
 
+    drawchart(game)
+    {
+        //console.log(d3.select("#flexRadioDefault2").property("checked"))
+        let data  = d3.filter(this.loadedData, d => d.GameId === game.GameId)
+
+        var other = data[0]
+
+        if(game.Location === data[0].Location)
+        {
+             other = data[1]
+        }
+        
+        let home = data[0]
+        let away = data[1]
+
+       if(game["Average_Line_Spread"] < 0)
+       {
+            home = game;
+            away = other
+       }
+       else
+       {
+            home = other
+            away = game
+       }
+
+        if(d3.select("#flexRadioDefault2").property("checked"))
+        {
+            this.drawchartSpread(home, away)
+        }
+        else
+        {
+            this.drawchartMoney(home, away)
+        }
+        //this.drawchartSpread(this.loadedData[1], this.loadedData[0])
+
+        //this.drawchartMoney(this.loadedData[1], this.loadedData[0])
+    }
+    
+    
     drawchartMoney(home, away)
     {
         let totalSites = [];
