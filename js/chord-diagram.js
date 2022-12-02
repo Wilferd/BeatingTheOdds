@@ -57,7 +57,8 @@ class ChordDiagram {
         })
 
         d3.select("#wins-radio-button").on("click", ()=>{        
-            this.update()})
+            this.update()
+        })
 
         d3.select("#spread-radio-button").on("click", ()=>{
             this.update()
@@ -68,6 +69,7 @@ class ChordDiagram {
         d3.select("#least-spread-radio-button").on("click", ()=>{
             this.update()
         })
+        console.log(this.teams)
     }
 
     update(){
