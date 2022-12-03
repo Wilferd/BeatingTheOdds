@@ -22,133 +22,162 @@
 
 <body style="background-color: #d9d9d9;">
     <div id="header-wrap">
-        <header>
-            <h1 id="title">Beat the odds</h1>
-        </header>
+
     </div>
 
 
     <div id="content">
-        <div id="teamButtons"></div>
-        <div id="predictionButtons" style="display: flex;">
-            <div id="switch1" class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                <label class="form-check-label" for="flexSwitchCheckDefault">
-                    <p class="lead">
-                        Most Mispredicted
-                    </p>
-                </label>
+        <div id="title-header-container">
+            <div id="top-content-container">
+                <div id="teamButtons"></div>
+                    <div id="predictionButtons">
+                        <div id="switch1" class="form-check form-switch" style="margin-right: 20px;">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">
+                                <p class="lead">
+                                    Most Mispredicted
+                                </p>
+                            </label>
+                        </div>
+                        <div class="dropdown">
+                            <button class="dropbtn">Season</button>
+                            <div class="dropdown-content">
+                                <a id= "season12-13" href="#">2012-2013</a>
+                                <a id= "season13-14" href="#">2013-2014</a>
+                                <a id= "season14-15" href="#">2014-2015</a>
+                                <a id= "season15-16" href="#">2015-2016</a>
+                                <a id= "season16-17" href="#">2016-2017</a>
+                                <a id= "season17-18" href="#">2017-2018</a>
+                                <a id= "season18-19" href="#">2018-2019</a>
+                            </div>
+                        </div>
+                        <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-left: 20px;"/>
+                        <div id="switch2" class="form-check form-switch" style="margin-left: 20px;">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault2">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">
+                                <p class="lead">
+                                    Most Correctly Predicted
+                                </p>
+                            </label>
+                        </div>
+                </div>
             </div>
-            <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-left: 40px;"/>
-            <div id="switch2" class="form-check form-switch" style="margin-left: 20px;">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault2">
-                <label class="form-check-label" for="flexSwitchCheckDefault">
-                    <p class="lead">
-                        Most Correctly Predicted
-                    </p>
-                </label>
-            </div>
+            <h1 id="title">Beating the odds</h1>
         </div>
         <div id="line-chart-key">
             <h3 style="margin-left: 20%;">NBA Game Predictions using Vegas Odds</h3>
             <svg id="key-svg"></svg>
         </div>
-        <div id="bar-chart-radios">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                <label class="form-check-label" for="flexRadioDefault1">
-                    Money Line
-                </label>
+        <div id="bar-line-chart-container">
+            <svg id="line-chart">
+                <g id="x-axis"></g>
+                <g id="y-axis"></g>
+                <g id="lines"></g>
+                <g id="dots"></g>
+                <g id="border"></g>
+                <g id="voronoi"></g>
+            </svg>
+            <div id="bar-chart-radios">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                        Money Line
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                    <label class="form-check-label" for="flexRadioDefault2">
+                        Line Spread
+                    </label>
+                </div>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                <label class="form-check-label" for="flexRadioDefault2">
-                    Line Spread
-                </label>
+            <svg id="bar-chart" width="500" height="500">
+                <g id="bar-chart-info">
+                    <text id="BarChartTitle"></text>
+                    <text id="BarChartHome"></text>
+                    <rect id="BarChartHomeRect"></rect>
+                    <text id="BarChartAway"></text>
+                    <rect id="BarChartAwayRect"></rect>
+                </g>
+                <g id="bar-y-axis"></g>
+                <g id="bar-x-axis"></g>
+                <g id="bar-line"></g>
+                <g id="bar-chart-rects"></g>
+            </svg>
+            <div id="bar-chart-text">
+                <p>
+                    The bar chart shows the data of the NBA game that is being hovered in the line chart. 
+                    This includes the team selected and their opponent, along with the money line or line spread
+                    of that game.
+                <p>
+                    The x-axis is the different betting websites that the data was pulled from. The y-axis is the line spread or money spread given by each betting website. 
+                </p>    
+                </p>
             </div>
         </div>
-        <svg id="line-chart">
-            <g id="x-axis"></g>
-            <g id="y-axis"></g>
-            <g id="lines"></g>
-            <g id="dots"></g>
-            <g id="border"></g>
-            <g id="voronoi"></g>
-        </svg>
-        <svg id="bar-chart" width="500" height="500">
-            <g id="bar-chart-info">
-                <text id="BarChartTitle"></text>
-                <text id="BarChartHome"></text>
-                <rect id="BarChartHomeRect"></rect>
-                <text id="BarChartAway"></text>
-                <rect id="BarChartAwayRect"></rect>
-            </g>
-            <g id="bar-y-axis"></g>
-            <g id="bar-x-axis"></g>
-            <g id="bar-line"></g>
-            <g id="bar-chart-rects"></g>
-        </svg>
         <div id="chord-diagram-control-container">
-            <h3>Spoke for Chord Diagram</h3>
-            <hr/>
-            <div id="shuffle-effect-switch" class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="shuffle-effect-switch-flex">
-                <label class="form-check-label" for="shuffle-effect-switch-flex">
-                    <p class="lead">
-                        Shuffle Teams (animation)
-                    </p>
-                </label>
+            <div id="chord-diagram-settings-container">
+                <h3>Settings for Spoke Diagram</h3>
+                <hr/>
+                <div id="shuffle-effect-switch" class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="shuffle-effect-switch-flex">
+                    <label class="form-check-label" for="shuffle-effect-switch-flex">
+                        <p class="lead">
+                            Shuffle Teams (animation)
+                        </p>
+                    </label>
+                </div>
+                <hr/>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="chord" id="wins-radio-button"checked>
+                    <label class="form-check-label" for="wins-radio-button">
+                        Wins
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="chord" id="spread-radio-button" >
+                    <label class="form-check-label" for="spread-radio-button">
+                        Covered Spread
+                    </label>
+                </div>
+                <hr/>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="chord" id="most-spread-radio-button" >
+                    <label class="form-check-label" for="most-spread-radio-button">
+                        Covered the Spread the Most Times
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="chord" id="least-spread-radio-button" >
+                    <label class="form-check-label" for="least-spread-radio-button">
+                        Covered the Spread the Least Times
+                    </label>
+                </div>
+                <hr/>
+                <h5 id="chord-legend-text"></h5>
+                <svg id="chord-legend">
             </div>
-            <hr/>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="chord" id="wins-radio-button"checked>
-                <label class="form-check-label" for="wins-radio-button">
-                    Wins
-                </label>
+            <svg id="chord-diagram">
+                <g id="chord-images"></g>
+                <g id="chord-lines"></g>
+            </svg>
+            <div id="chord-story-telling">
+                <p>
+                    This spoke diagram shows a couple different "head-to-head" data for a selected team.
+                    The first one is the wins and once a team is selected, the other spokes show a coral 
+                    if the selected team lost all of the match-ups and light green if they won all of the match-ups. Then for the colors
+                    inbetween it is interpolated like in the legend.
+                </p>
+                <p>
+                    The covered spread option shows if the spread was covered 
+                    (either you won more than expected or lost less than expected when it comes to points scored). 
+                    Similar to the first one the colors are interpolated.
+                </p>
+                <p>
+                    The most spread covered shows the team that covered the spread the most out of all the teams and the least covered shows 
+                    the team that covered the spread the least out of all the teams.
+                </p>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="chord" id="spread-radio-button" >
-                <label class="form-check-label" for="spread-radio-button">
-                    Covered Spread
-                </label>
-            </div>
-            <hr/>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="chord" id="most-spread-radio-button" >
-                <label class="form-check-label" for="most-spread-radio-button">
-                    Covered Most Spread
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="chord" id="least-spread-radio-button" >
-                <label class="form-check-label" for="least-spread-radio-button">
-                    Covered Least Spread
-                </label>
-            </div>
-            <hr/>
-            <svg id="chord-legend">
-            <p id="chord-legend-text" style="text-align:center"></p>
-        </div>
-        <svg id="chord-diagram">
-            <g id="chord-images"></g>
-            <g id="chord-lines"></g>
-        </svg>
-        <div id="chord-story-telling">
-            <p>
-                This spoke diagram shows a couple different "head-to-head" data for a selected team.
-                The first one is the wins and once a team is selected, the other spokes show a coral 
-                if the selected team lost all of the match-ups and light green if they won all of the match-ups. Then for the colors
-                inbetween it is interpolated like in the legend.
-            </p>
-            <p>
-                The covered spread option shows if the spread was covered 
-                (either you won more than expected or lost less than expected when it comes to points scored). 
-                Similar to the first one the colors are interpolated.
-            </p>
-            <p>
-                The most spread covered shows the team that covered the spread the most out of all the teams and the least covered shows 
-                the team that covered the spread the least out of all the teams.
-            </p>
         </div>
     </div 
 </body>

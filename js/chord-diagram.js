@@ -80,7 +80,9 @@ class ChordDiagram {
                 .attr("height", 20)
                 .attr('x', 0)
                 .attr('y', 0)
-                .attr('fill', 'url(#color-gradient)');
+                .attr('fill', 'url(#color-gradient)')
+                .attr("stroke", "black")
+                .attr("stroke-width", 2);
         
         this.update()
 
@@ -114,7 +116,7 @@ class ChordDiagram {
     update(){
         let selectedTeam = this.teams.filter(d => d.team === this.state.selectedTeam)[0]
         if(d3.select("#wins-radio-button").property("checked")){
-            $("#chord-legend-text").html("Wins")
+            $("#chord-legend-text").html("Wins Legend")
 
             d3.select("#chord-lines")
                 .selectAll("line")
@@ -129,7 +131,7 @@ class ChordDiagram {
                 )
                 .attr("stroke-linecap", "round")
         }else if (d3.select("#spread-radio-button").property("checked")) {
-            $("#chord-legend-text").html("Spread Covering")
+            $("#chord-legend-text").html("Spread Covering Legend")
             d3.select("#chord-lines")
                 .selectAll("line")
                 .data(selectedTeam["spreadData"])
@@ -143,11 +145,11 @@ class ChordDiagram {
                 )
                 .attr("stroke-linecap", "round")
         }else if(d3.select("#most-spread-radio-button").property("checked")){
-            $("#chord-legend-text").html("Most Spread Covering")
+            $("#chord-legend-text").html("Most Spread Covering Legend")
             this.leastOrMostSpread(false)
 
         }else if(d3.select("#least-spread-radio-button").property("checked")){
-            $("#chord-legend-text").html("Least Spread Covering")
+            $("#chord-legend-text").html("Least Spread Covering Legend")
             this.leastOrMostSpread(true)
         }
         this.drawImages()
