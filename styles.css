@@ -54,6 +54,9 @@
     font-size: 20px;
 }
 
+#bar-chart-text{
+    width: 255px;
+}
 
 #title{
     width:313px;
@@ -95,7 +98,7 @@ html *
 
 
 #vornoi{
-    width: 1000px;
+    width: 1060px;
     height: 750px;
 }
 
@@ -110,7 +113,7 @@ html *
 }
 
 #line-chart {
-    width: 1000px;
+    width: 1060px;
     height: 750px;
 }
 
@@ -154,3 +157,7 @@ html *
 body {
     background-color: black;
 }
+
+.barRadio label {
+    font-size: 20px;
+  }
