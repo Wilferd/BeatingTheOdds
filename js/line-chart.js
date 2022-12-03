@@ -28,6 +28,7 @@ class LineChart {
 
     createKey() {
         let selection = d3.select("#key-svg");
+        let circleRadius = Math.sqrt(Math.pow(IMAGE_WIDTH/2, 2) + Math.pow(IMAGE_HEIGHT/2, 2)) - 2.5;
       
         const startingImageX = 80;
         selection.append('image')
@@ -37,12 +38,11 @@ class LineChart {
             .attr('height', IMAGE_HEIGHT)
             .attr("xlink:href", d => `logos/ball.png`);
 
-        selection.append('rect')
+        selection.append('circle')
             .attr('class', 'image-border-correct')
-            .attr('x', startingImageX)
-            .attr('y', 20)
-            .attr('width', IMAGE_WIDTH)
-            .attr('height', IMAGE_HEIGHT);
+            .attr('cx', startingImageX + IMAGE_WIDTH/2)
+            .attr('cy', 20 + IMAGE_HEIGHT/2)
+            .attr('r', circleRadius);
 
         selection.append('text')
             .text('Correctly Predicted')
@@ -57,12 +57,11 @@ class LineChart {
             .attr('height', IMAGE_HEIGHT)
             .attr("xlink:href", d => `logos/ball.png`);
 
-        selection.append('rect')
+        selection.append('circle')
             .attr('class', 'image-border-wrong')
-            .attr('x', secondImageX)
-            .attr('y', 20)
-            .attr('width', IMAGE_WIDTH)
-            .attr('height', IMAGE_HEIGHT);
+            .attr('cx', secondImageX+ IMAGE_WIDTH/2)
+            .attr('cy', 20+ IMAGE_HEIGHT/2)
+            .attr('r', circleRadius);
 
         selection.append('text')
             .text('Incorrectly Predicted')
@@ -223,8 +222,8 @@ class LineChart {
         $(function () {
             $('input[name="daterange"]').daterangepicker({
                 opens: 'left',
-                startDate: this.dateStart,
-                endDate: this.dateEnd,
+                startDate: outerContext.dateStart,
+                endDate: outerContext.dateEnd,
                 minDate: outerContext.originalStart,
                 maxDate: outerContext.originalEnd
             }, function (start, end, label) {
