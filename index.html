@@ -31,7 +31,7 @@
             <div id="top-content-container">
                 <div id="teamButtons"></div>
                     <div id="predictionButtons">
-                        <div id="switch1" class="form-check form-switch">
+                        <div id="switch1" class="form-check form-switch" style="margin-right: 20px;">
                             <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                             <label class="form-check-label" for="flexSwitchCheckDefault">
                                 <p class="lead">
@@ -39,7 +39,19 @@
                                 </p>
                             </label>
                         </div>
-                        <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-left: 40px;"/>
+                        <div class="dropdown">
+                            <button class="dropbtn">Season</button>
+                            <div class="dropdown-content">
+                                <a id= "season12-13" href="#">2012-2013</a>
+                                <a id= "season13-14" href="#">2013-2014</a>
+                                <a id= "season14-15" href="#">2014-2015</a>
+                                <a id= "season15-16" href="#">2015-2016</a>
+                                <a id= "season16-17" href="#">2016-2017</a>
+                                <a id= "season17-18" href="#">2017-2018</a>
+                                <a id= "season18-19" href="#">2018-2019</a>
+                            </div>
+                        </div>
+                        <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-left: 20px;"/>
                         <div id="switch2" class="form-check form-switch" style="margin-left: 20px;">
                             <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault2">
                             <label class="form-check-label" for="flexSwitchCheckDefault">
