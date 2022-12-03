@@ -54,18 +54,39 @@
             <svg id="key-svg"></svg>
         </div>
         <div id="bar-chart-radios">
-            <div class="form-check">
+            <div class="barRadio">
                 <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
                 <label class="form-check-label" for="flexRadioDefault1">
                     Money Line
                 </label>
             </div>
-            <div class="form-check">
+            <div class="barRadio">
                 <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
                 <label class="form-check-label" for="flexRadioDefault2">
                     Line Spread
                 </label>
             </div>
+        </div>
+        <div class="bar-chart-text" style="float: right;">
+            <p>
+                The bar chart shows the data of the NBA game that is being hovered in the line chart. 
+                This includes the team selected and their opponent, along with the money line or line spread
+                of that game. The teams are designated by color.
+
+            </p>
+            <p>
+                The x-axis is the different betting websites that the data was pulled from. The y-axis is the line spread or money spread given by each betting website. 
+            </p>
+            <p>
+                The line spread chart shows the line spread, which, when negative, shows the amount a team is supposed to win by and,
+                when positive, shows the amount a team is supposed to lose by. 
+            </p>
+            <p>
+                The money line chart shows the money line, which is a bet on which team will win a game, negative for the winning team
+                and positive for the losing team. The more negative or positive the number, the more likely a team will win/lose and the 
+                more or less money will be made for betting. 
+            </p>
+           
         </div>
         <svg id="line-chart">
             <g id="x-axis"></g>
