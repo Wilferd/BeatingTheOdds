@@ -89,66 +89,68 @@
             <g id="bar-chart-rects"></g>
         </svg>
         <div id="chord-diagram-control-container">
-            <h3>Spoke for Chord Diagram</h3>
-            <hr/>
-            <div id="shuffle-effect-switch" class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="shuffle-effect-switch-flex">
-                <label class="form-check-label" for="shuffle-effect-switch-flex">
-                    <p class="lead">
-                        Shuffle Teams (animation)
-                    </p>
-                </label>
+            <div id="chord-diagram-settings-container">
+                <h3>Spoke for Chord Diagram</h3>
+                <hr/>
+                <div id="shuffle-effect-switch" class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="shuffle-effect-switch-flex">
+                    <label class="form-check-label" for="shuffle-effect-switch-flex">
+                        <p class="lead">
+                            Shuffle Teams (animation)
+                        </p>
+                    </label>
+                </div>
+                <hr/>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="chord" id="wins-radio-button"checked>
+                    <label class="form-check-label" for="wins-radio-button">
+                        Wins
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="chord" id="spread-radio-button" >
+                    <label class="form-check-label" for="spread-radio-button">
+                        Covered Spread
+                    </label>
+                </div>
+                <hr/>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="chord" id="most-spread-radio-button" >
+                    <label class="form-check-label" for="most-spread-radio-button">
+                        Covered the Spread the Most Times
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="chord" id="least-spread-radio-button" >
+                    <label class="form-check-label" for="least-spread-radio-button">
+                        Covered the Spread the Least Times
+                    </label>
+                </div>
+                <hr/>
+                <h5 id="chord-legend-text"></h5>
+                <svg id="chord-legend">
             </div>
-            <hr/>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="chord" id="wins-radio-button"checked>
-                <label class="form-check-label" for="wins-radio-button">
-                    Wins
-                </label>
+            <svg id="chord-diagram">
+                <g id="chord-images"></g>
+                <g id="chord-lines"></g>
+            </svg>
+            <div id="chord-story-telling">
+                <p>
+                    This spoke diagram shows a couple different "head-to-head" data for a selected team.
+                    The first one is the wins and once a team is selected, the other spokes show a coral 
+                    if the selected team lost all of the match-ups and light green if they won all of the match-ups. Then for the colors
+                    inbetween it is interpolated like in the legend.
+                </p>
+                <p>
+                    The covered spread option shows if the spread was covered 
+                    (either you won more than expected or lost less than expected when it comes to points scored). 
+                    Similar to the first one the colors are interpolated.
+                </p>
+                <p>
+                    The most spread covered shows the team that covered the spread the most out of all the teams and the least covered shows 
+                    the team that covered the spread the least out of all the teams.
+                </p>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="chord" id="spread-radio-button" >
-                <label class="form-check-label" for="spread-radio-button">
-                    Covered Spread
-                </label>
-            </div>
-            <hr/>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="chord" id="most-spread-radio-button" >
-                <label class="form-check-label" for="most-spread-radio-button">
-                    Covered Most Spread
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="chord" id="least-spread-radio-button" >
-                <label class="form-check-label" for="least-spread-radio-button">
-                    Covered Least Spread
-                </label>
-            </div>
-            <hr/>
-            <svg id="chord-legend">
-            <p id="chord-legend-text" style="text-align:center"></p>
-        </div>
-        <svg id="chord-diagram">
-            <g id="chord-images"></g>
-            <g id="chord-lines"></g>
-        </svg>
-        <div id="chord-story-telling">
-            <p>
-                This spoke diagram shows a couple different "head-to-head" data for a selected team.
-                The first one is the wins and once a team is selected, the other spokes show a coral 
-                if the selected team lost all of the match-ups and light green if they won all of the match-ups. Then for the colors
-                inbetween it is interpolated like in the legend.
-            </p>
-            <p>
-                The covered spread option shows if the spread was covered 
-                (either you won more than expected or lost less than expected when it comes to points scored). 
-                Similar to the first one the colors are interpolated.
-            </p>
-            <p>
-                The most spread covered shows the team that covered the spread the most out of all the teams and the least covered shows 
-                the team that covered the spread the least out of all the teams.
-            </p>
         </div>
     </div 
 </body>
