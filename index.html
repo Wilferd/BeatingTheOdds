@@ -22,75 +22,80 @@
 
 <body style="background-color: #d9d9d9;">
     <div id="header-wrap">
-        <header>
-            <h1 id="title">Beat the odds</h1>
-        </header>
+
     </div>
 
 
     <div id="content">
-        <div id="teamButtons"></div>
-        <div id="predictionButtons" style="display: flex;">
-            <div id="switch1" class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                <label class="form-check-label" for="flexSwitchCheckDefault">
-                    <p class="lead">
-                        Most Mispredicted
-                    </p>
-                </label>
+        <div id="title-header-container">
+            <div id="top-content-container">
+                <div id="teamButtons"></div>
+                    <div id="predictionButtons">
+                        <div id="switch1" class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">
+                                <p class="lead">
+                                    Most Mispredicted
+                                </p>
+                            </label>
+                        </div>
+                        <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-left: 40px;"/>
+                        <div id="switch2" class="form-check form-switch" style="margin-left: 20px;">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault2">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">
+                                <p class="lead">
+                                    Most Correctly Predicted
+                                </p>
+                            </label>
+                        </div>
+                </div>
             </div>
-            <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-left: 40px;"/>
-            <div id="switch2" class="form-check form-switch" style="margin-left: 20px;">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault2">
-                <label class="form-check-label" for="flexSwitchCheckDefault">
-                    <p class="lead">
-                        Most Correctly Predicted
-                    </p>
-                </label>
-            </div>
+            <h1 id="title">Beating the odds</h1>
         </div>
         <div id="line-chart-key">
             <h3 style="margin-left: 20%;">NBA Game Predictions using Vegas Odds</h3>
             <svg id="key-svg"></svg>
         </div>
-        <div id="bar-chart-radios">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                <label class="form-check-label" for="flexRadioDefault1">
-                    Money Line
-                </label>
+        <div id="bar-line-chart-container">
+            <svg id="line-chart">
+                <g id="x-axis"></g>
+                <g id="y-axis"></g>
+                <g id="lines"></g>
+                <g id="dots"></g>
+                <g id="border"></g>
+                <g id="voronoi"></g>
+            </svg>
+            <div id="bar-chart-radios">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                        Money Line
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                    <label class="form-check-label" for="flexRadioDefault2">
+                        Line Spread
+                    </label>
+                </div>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                <label class="form-check-label" for="flexRadioDefault2">
-                    Line Spread
-                </label>
-            </div>
+            <svg id="bar-chart" width="500" height="500">
+                <g id="bar-chart-info">
+                    <text id="BarChartTitle"></text>
+                    <text id="BarChartHome"></text>
+                    <rect id="BarChartHomeRect"></rect>
+                    <text id="BarChartAway"></text>
+                    <rect id="BarChartAwayRect"></rect>
+                </g>
+                <g id="bar-y-axis"></g>
+                <g id="bar-x-axis"></g>
+                <g id="bar-line"></g>
+                <g id="bar-chart-rects"></g>
+            </svg>
         </div>
-        <svg id="line-chart">
-            <g id="x-axis"></g>
-            <g id="y-axis"></g>
-            <g id="lines"></g>
-            <g id="dots"></g>
-            <g id="border"></g>
-            <g id="voronoi"></g>
-        </svg>
-        <svg id="bar-chart" width="500" height="500">
-            <g id="bar-chart-info">
-                <text id="BarChartTitle"></text>
-                <text id="BarChartHome"></text>
-                <rect id="BarChartHomeRect"></rect>
-                <text id="BarChartAway"></text>
-                <rect id="BarChartAwayRect"></rect>
-            </g>
-            <g id="bar-y-axis"></g>
-            <g id="bar-x-axis"></g>
-            <g id="bar-line"></g>
-            <g id="bar-chart-rects"></g>
-        </svg>
         <div id="chord-diagram-control-container">
             <div id="chord-diagram-settings-container">
-                <h3>Spoke for Chord Diagram</h3>
+                <h3>Settings for Spoke Diagram</h3>
                 <hr/>
                 <div id="shuffle-effect-switch" class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="shuffle-effect-switch-flex">

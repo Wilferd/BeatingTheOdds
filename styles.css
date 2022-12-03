@@ -3,17 +3,35 @@
     width: 700px;
     display: block;
 }
+#predictionButtons{
+    display:flex;
+    flex-direction: row;
+}
 
-#bar-chart-radios{
-    position:absolute;
-    top:65%;
-    left:65%;
+#title-header-container{
+    display:flex;
+    flex-direction: row;
+}
+
+#bar-line-chart-container{
+    display: flex;
+    flex-direction: row;
+}
+
+#top-content-container{
+    display: flex;
+    flex-direction: column;
 }
 
 #chord-diagram-control-container{
     display:flex;
     flex-direction: row;
     margin-left: 80px;
+}
+
+#bar-chart-radios{
+    display: flex;
+    flex-direction: column;
 }
 
 #chord-diagram-control-container > div{
@@ -38,7 +56,14 @@
 
 
 #title{
+    width:313px;
+    font-size: 83px;
     text-align:center;    
+    margin-top: 10px;
+    margin-left: 125px;
+    border: 2px solid black;
+    border-radius: 10px;
+    height: fit-content;
 }
 
 html *
@@ -51,7 +76,9 @@ html *
     overflow-y: auto;
     border: 2px solid black;
     border-radius: 10px;
-    margin: auto;
+    margin-left: 80px;
+    margin-top: 10px;
+    /* margin: auto; */
 }
 
 #teamButtons > input{
@@ -61,16 +88,20 @@ html *
     background-color: #4CAF50;
 }
 
-#chord-diagram-control-container{
-    /* position: absolute;
-    top:150%;
-    left:10%;
-    width: fit-content;
-    height: fit-content; */
+#predictionButtons{
+    justify-content: left;
+    margin-left: 80px;
 }
 
-#predictionButtons{
-    margin-left:570px;
+
+#vornoi{
+    width: 1000px;
+    height: 750px;
+}
+
+#content{
+    /* display:flex;
+    flex-direction: column; */
 }
 
 #key-svg{
@@ -79,7 +110,7 @@ html *
 }
 
 #line-chart {
-    width: 1361px;
+    width: 1000px;
     height: 750px;
 }
 
