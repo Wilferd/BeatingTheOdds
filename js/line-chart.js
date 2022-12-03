@@ -477,7 +477,7 @@ class LineChart {
                     `${xAxis(new Date(hover.Date)) - IMAGE_WIDTH / 2}px`
                 )
                 .style('background', 'rgba(255,255,255,0.8)')
-                .style('top', `${350 + yAxis(parseFloat(hover[key])) - IMAGE_HEIGHT / 2}px`)
+                .style('top', `${425 + yAxis(parseFloat(hover[key])) - IMAGE_HEIGHT / 2}px`)
                 .html(`<div>
                  <strong>Team</strong>: ${hover.Team} <br>
                  <strong>Opponent</strong>: ${hover.OppTeam} <br>
