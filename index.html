@@ -30,43 +30,50 @@
         <div id="title-header-container">
             <div id="top-content-container">
                 <div id="teamButtons"></div>
-                    <div id="predictionButtons">
-                        <div id="switch1" class="form-check form-switch" style="margin-right: 20px;">
-                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                            <label class="form-check-label" for="flexSwitchCheckDefault">
-                                <p class="lead">
-                                    Most Mispredicted
-                                </p>
-                            </label>
+                <div id="predictionButtons">
+                    <div id="switch1" class="form-check form-switch" style="margin-right: 20px;">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">
+                            <p class="lead">
+                                Most Mispredicted
+                            </p>
+                        </label>
+                    </div>
+                    <div class="dropdown">
+                        <button class="dropbtn">Season</button>
+                        <div class="dropdown-content">
+                            <a id="season12-13" href="#">2012-2013</a>
+                            <a id="season13-14" href="#">2013-2014</a>
+                            <a id="season14-15" href="#">2014-2015</a>
+                            <a id="season15-16" href="#">2015-2016</a>
+                            <a id="season16-17" href="#">2016-2017</a>
+                            <a id="season17-18" href="#">2017-2018</a>
+                            <a id="season18-19" href="#">2018-2019</a>
                         </div>
-                        <div class="dropdown">
-                            <button class="dropbtn">Season</button>
-                            <div class="dropdown-content">
-                                <a id= "season12-13" href="#">2012-2013</a>
-                                <a id= "season13-14" href="#">2013-2014</a>
-                                <a id= "season14-15" href="#">2014-2015</a>
-                                <a id= "season15-16" href="#">2015-2016</a>
-                                <a id= "season16-17" href="#">2016-2017</a>
-                                <a id= "season17-18" href="#">2017-2018</a>
-                                <a id= "season18-19" href="#">2018-2019</a>
-                            </div>
-                        </div>
-                        <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-left: 20px;"/>
-                        <div id="switch2" class="form-check form-switch" style="margin-left: 20px;">
-                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault2">
-                            <label class="form-check-label" for="flexSwitchCheckDefault">
-                                <p class="lead">
-                                    Most Correctly Predicted
-                                </p>
-                            </label>
-                        </div>
+                    </div>
+                    <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="margin-left: 20px;" />
+                    <div id="switch2" class="form-check form-switch" style="margin-left: 20px;">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault2">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">
+                            <p class="lead">
+                                Most Correctly Predicted
+                            </p>
+                        </label>
+                    </div>
                 </div>
             </div>
             <h1 id="title">Beating the odds</h1>
         </div>
         <div id="line-chart-key">
             <h3 style="margin-left: 20%;">NBA Game Predictions using Vegas Odds</h3>
-            <svg id="key-svg"></svg>
+            <svg id="key-svg">
+                <image x="80" y="20" width="30" height="36" xlink:href="logos/ball.png"></image>
+                <circle class="image-border-correct" cx="95" cy="38" r="20.930749027719962"></circle>
+                <text transform="translate( 120, 35)" style="font-size: 18px;">Correctly Predicted</text>
+                <image x="305" y="20" width="30" height="36" xlink:href="logos/ball.png"></image>
+                <circle class="image-border-wrong" cx="320" cy="38" r="20.930749027719962"></circle><text
+                    transform="translate( 345, 35)" style="font-size: 18px;">Incorrectly Predicted</text>
+            </svg>
         </div>
         <div id="bar-line-chart-container">
             <svg id="line-chart">
@@ -76,6 +83,7 @@
                 <g id="dots"></g>
                 <g id="border"></g>
                 <g id="voronoi"></g>
+                <text x="-285" y="20" transform="rotate(-90)" style="font-size: 18px;">Average Money Line</text>
             </svg>
             <div id="bar-chart-radios">
                 <div class="form-check">
@@ -106,19 +114,20 @@
             </svg>
             <div id="bar-chart-text">
                 <p>
-                    The bar chart shows the data of the NBA game that is being hovered in the line chart. 
+                    The bar chart shows the data of the NBA game that is being hovered in the line chart.
                     This includes the team selected and their opponent, along with the money line or line spread
                     of that game.
                 <p>
-                    The x-axis is the different betting websites that the data was pulled from. The y-axis is the line spread or money spread given by each betting website. 
-                </p>    
+                    The x-axis is the different betting websites that the data was pulled from. The y-axis is the line
+                    spread or money spread given by each betting website.
+                </p>
                 </p>
             </div>
         </div>
         <div id="chord-diagram-control-container">
             <div id="chord-diagram-settings-container">
                 <h3>Settings for Spoke Diagram</h3>
-                <hr/>
+                <hr />
                 <div id="shuffle-effect-switch" class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="shuffle-effect-switch-flex">
                     <label class="form-check-label" for="shuffle-effect-switch-flex">
@@ -127,33 +136,33 @@
                         </p>
                     </label>
                 </div>
-                <hr/>
+                <hr />
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="chord" id="wins-radio-button"checked>
+                    <input class="form-check-input" type="radio" name="chord" id="wins-radio-button" checked>
                     <label class="form-check-label" for="wins-radio-button">
                         Wins
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="chord" id="spread-radio-button" >
+                    <input class="form-check-input" type="radio" name="chord" id="spread-radio-button">
                     <label class="form-check-label" for="spread-radio-button">
                         Covered Spread
                     </label>
                 </div>
-                <hr/>
+                <hr />
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="chord" id="most-spread-radio-button" >
+                    <input class="form-check-input" type="radio" name="chord" id="most-spread-radio-button">
                     <label class="form-check-label" for="most-spread-radio-button">
                         Covered the Spread the Most Times
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="chord" id="least-spread-radio-button" >
+                    <input class="form-check-input" type="radio" name="chord" id="least-spread-radio-button">
                     <label class="form-check-label" for="least-spread-radio-button">
                         Covered the Spread the Least Times
                     </label>
                 </div>
-                <hr/>
+                <hr />
                 <h5 id="chord-legend-text"></h5>
                 <svg id="chord-legend">
             </div>
@@ -164,22 +173,23 @@
             <div id="chord-story-telling">
                 <p>
                     This spoke diagram shows a couple different "head-to-head" data for a selected team.
-                    The first one is the wins and once a team is selected, the other spokes show a coral 
-                    if the selected team lost all of the match-ups and light green if they won all of the match-ups. Then for the colors
+                    The first one is the wins and once a team is selected, the other spokes show a coral color
+                    if the selected team lost all of the match-ups and light green if they won all of the match-ups.
+                    Then for the colors
                     inbetween it is interpolated like in the legend.
                 </p>
                 <p>
-                    The covered spread option shows if the spread was covered 
-                    (either you won more than expected or lost less than expected when it comes to points scored). 
+                    The covered spread option shows if the spread was covered
+                    (either you won more than expected or lost less than expected when it comes to points scored).
                     Similar to the first one the colors are interpolated.
                 </p>
                 <p>
-                    The most spread covered shows the team that covered the spread the most out of all the teams and the least covered shows 
+                    The most spread covered shows the team that covered the spread the most out of all the teams and the
+                    least covered shows
                     the team that covered the spread the least out of all the teams.
                 </p>
             </div>
         </div>
-    </div 
-</body>
+    </div </body>
 
 </html>
