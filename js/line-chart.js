@@ -23,52 +23,8 @@ class LineChart {
 
         this.originalData = data;
         this.setUp(key, data, lineColorScale);
-        this.createKey();
     }
 
-    createKey() {
-        let selection = d3.select("#key-svg");
-        let circleRadius = Math.sqrt(Math.pow(IMAGE_WIDTH/2, 2) + Math.pow(IMAGE_HEIGHT/2, 2)) - 2.5;
-      
-        const startingImageX = 80;
-        selection.append('image')
-            .attr('x', startingImageX)
-            .attr('y', 20)
-            .attr('width', IMAGE_WIDTH)
-            .attr('height', IMAGE_HEIGHT)
-            .attr("xlink:href", d => `logos/ball.png`);
-
-        selection.append('circle')
-            .attr('class', 'image-border-correct')
-            .attr('cx', startingImageX + IMAGE_WIDTH/2)
-            .attr('cy', 20 + IMAGE_HEIGHT/2)
-            .attr('r', circleRadius);
-
-        selection.append('text')
-            .text('Correctly Predicted')
-            .attr('transform', `translate( ${startingImageX + 40}, 35)`)
-            .style('font-size', '18');
-
-        const secondImageX = startingImageX + 200;
-            selection.append('image')
-            .attr('x', secondImageX)
-            .attr('y', 20)
-            .attr('width', IMAGE_WIDTH)
-            .attr('height', IMAGE_HEIGHT)
-            .attr("xlink:href", d => `logos/ball.png`);
-
-        selection.append('circle')
-            .attr('class', 'image-border-wrong')
-            .attr('cx', secondImageX+ IMAGE_WIDTH/2)
-            .attr('cy', 20+ IMAGE_HEIGHT/2)
-            .attr('r', circleRadius);
-
-        selection.append('text')
-            .text('Incorrectly Predicted')
-            .attr('transform', `translate( ${secondImageX + 40}, 35)`)
-            .style('font-size', '18');
-
-    }
     /**
      * Creates the team buttons
      * @param {*} key 
@@ -383,14 +339,14 @@ class LineChart {
 
 
         // Append y axis text
-        d3
-            .select('#line-chart')
-            .append('text')
-            .text('Average Money Line')
-            .attr('x', -285)
-            .attr('y', 20)
-            .attr('transform', 'rotate(-90)')
-            .style('font-size', '18');
+        // d3
+        //     .select('#line-chart')
+        //     .append('text')
+        //     .text('Average Money Line')
+        //     .attr('x', -285)
+        //     .attr('y', 20)
+        //     .attr('transform', 'rotate(-90)')
+        //     .style('font-size', '18');
         return { xAxis, yAxis };
     }
 
