@@ -25,29 +25,36 @@ loadData().then((loadedData) => {
     update(loadedData); 
     d3.select("#season12-13").on("click", d=> {
         update(season12_13);
+        $("#chord-title").html(`Spoke Diagram (2012-2013)`)
     });
     d3.select("#season13-14").on("click", d=> {
         update(season13_14);
+        $("#chord-title").html(`Spoke Diagram (2013-2014)`)
     }
     );
     d3.select("#season14-15").on("click", d=> {
         update(season14_15);
+        $("#chord-title").html(`Spoke Diagram (2014-2015)`)
     }
     );
     d3.select("#season15-16").on("click", d=> {
         update(season15_16);
+        $("#chord-title").html(`Spoke Diagram (2015-2016)`)
     }
     );
     d3.select("#season16-17").on("click", d=> {
         update(season16_17);
+        $("#chord-title").html(`Spoke Diagram (2016-2017)`)
     }
     );
     d3.select("#season17-18").on("click", d=> {
         update(season17_18);
+        $("#chord-title").html(`Spoke Diagram (2017-2018)`)
     }
     );
     d3.select("#season18-19").on("click", d=> {
         update(season18_19);
+        $("#chord-title").html(`Spoke Diagram (2018-2019)`)
     }
     );
 });
