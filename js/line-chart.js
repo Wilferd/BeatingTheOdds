@@ -23,7 +23,6 @@ class LineChart {
 
         this.originalData = data;
         this.setUp(key, data, lineColorScale);
-        this.createKey();
     }
 
     createKey() {
@@ -383,14 +382,14 @@ class LineChart {
 
 
         // Append y axis text
-        d3
-            .select('#line-chart')
-            .append('text')
-            .text('Average Money Line')
-            .attr('x', -285)
-            .attr('y', 20)
-            .attr('transform', 'rotate(-90)')
-            .style('font-size', '18');
+        // d3
+        //     .select('#line-chart')
+        //     .append('text')
+        //     .text('Average Money Line')
+        //     .attr('x', -285)
+        //     .attr('y', 20)
+        //     .attr('transform', 'rotate(-90)')
+        //     .style('font-size', '18');
         return { xAxis, yAxis };
     }
 
