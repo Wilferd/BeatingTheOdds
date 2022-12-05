@@ -10,7 +10,7 @@ There’s a saying when it comes to gambling that “the house always wins.” T
 
 ## Important Links
 
-[Project Website] (https://wilferd.github.io/BeatingTheOdds/)
+[Project Website](https://wilferd.github.io/BeatingTheOdds/)
 
 [Process Book ](https://github.com/Wilferd/BeatingTheOdds/blob/main/CS%206630%20-%20Process%20Book.pdf)
 

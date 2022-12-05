@@ -50,6 +50,13 @@
     height:20px;
 }
 
+#socials-container{
+    margin-left: 100px;
+    margin-top: 10px;
+    font-size:20px;
+    text-align: center;
+}
+
 #chord-story-telling{
     width: 600px;
     height: fit-content;
@@ -58,6 +65,7 @@
 
 #bar-chart-text{
     width: 255px;
+    margin-left: 3px;
 }
 
 #title{
@@ -65,7 +73,7 @@
     font-size: 83px;
     text-align:center;    
     margin-top: 10px;
-    margin-left: 125px;
+    margin-left: 100px;
     border: 2px solid black;
     border-radius: 10px;
     height: fit-content;
@@ -103,7 +111,7 @@ html *
 }
 
 #key-svg{
-    width: 500px;
+    width: 600px;
     height: 100px;
 }
 
