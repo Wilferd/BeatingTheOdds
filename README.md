@@ -8,6 +8,8 @@ There’s a saying when it comes to gambling that “the house always wins.” T
 - Tyler Gaul
 - Mark Patterson
 
+## Important Links
+
 [Process Book ](https://github.com/Wilferd/BeatingTheOdds/blob/main/CS%206630%20-%20Process%20Book.pdf)
 
 [Video](https://youtu.be/a4xKcfkfQz0)
