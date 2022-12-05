@@ -1,22 +1,28 @@
 class ChordDiagram {
     constructor(loadedData){
+        // Keep track of the state of the visualization
         this.state =
         {
             selectedTeam: "Utah",
             shuffle: false
         }
+        
+        // Save the initial data for later use
         this.loadedData = loadedData;
+
+        // Create our data element for all of the teams
         this.teams = [];
         this.teamNames = new Set();
         loadedData.forEach(game => this.teamNames.add(game.Team));
         this.teamNames.forEach(team => this.teams.push({team: team}));
-
         this.teams.forEach(team => team.groupedData = d3.group(loadedData, d => d.Team).get(team.team))
         
+        // Create the color scale that will be used for the lines in the chord diagram
         this.colorScale = d3.scaleSequential()
             .domain([0,1])
             .interpolator(d3.interpolate("lightcoral", "lightgreen"));
 
+        // -------------------Constants-------------------
         this.imageWidth = 60;
         this.imageHeight = 60;
 
@@ -28,11 +34,15 @@ class ChordDiagram {
         this.diameter = this.width;
         this.radius = this.diameter / 2;
         this.innerRadius = this.radius - 120;
+        // -------------------End of Constants-------------------
 
+        // Populate the teams object with the data that we need
         this.assignPositions()
         this.calculateWins()
         this.calculateSpread()
 
+
+        // Dispaly the initial chord diagram
         d3.select('#chord-images')
             .selectAll("image")
             .data(this.teams, d=>d.team)
@@ -43,6 +53,7 @@ class ChordDiagram {
             .attr('height', this.imageHeight)
             .attr("xlink:href", d => `logos/${d.team}.png`)
 
+        // Create the legend for the chord diagram
         let minColor = this.colorScale(0);
         let midColor = this.colorScale(.5);
         let maxColor = this.colorScale(1);
@@ -84,8 +95,11 @@ class ChordDiagram {
                 .attr("stroke", "black")
                 .attr("stroke-width", 2);
         
+        // Call update on the initial state of the chord diagram
         this.update()
 
+
+        // ----------------Start of click handlers----------------
         d3.select('#chord-images').on("click", (d) => {
             this.state.selectedTeam = d.srcElement.__data__.team;
             this.assignPositions()
@@ -110,9 +124,11 @@ class ChordDiagram {
         d3.select("#least-spread-radio-button").on("click", ()=>{
             this.update()
         })
+        // ----------------End of click handlers----------------
     
     }
 
+    // Updates the chord diagram based on which radio button is selected
     update(){
         let selectedTeam = this.teams.filter(d => d.team === this.state.selectedTeam)[0]
         if(d3.select("#wins-radio-button").property("checked")){
@@ -159,6 +175,7 @@ class ChordDiagram {
         this.drawImages()
     }
 
+
     leastOrMostSpread(least){
         let coveredMost = least ? Math.pow(10, 1000): 0;
         let coveredMostTeam = "";
@@ -193,6 +210,7 @@ class ChordDiagram {
             .attr("stroke-linecap", "round")
     }
 
+    // Draws the images of the teams
     drawImages(){
         d3.select('#chord-images')
             .selectAll("image")
@@ -209,6 +227,7 @@ class ChordDiagram {
         d3.select("#chord-images").raise()
     }
 
+    // Assigns the positions of the teams and makes the selected one the center
     assignPositions(){
         const scale = d3.scaleLinear()
         .domain([1, this.teams.length])
@@ -235,6 +254,7 @@ class ChordDiagram {
         }
     }
 
+    // Populates the teams object with the wins data
     calculateWins(){
         this.teams.forEach(team => {
             team.winLoseData = []
@@ -258,6 +278,7 @@ class ChordDiagram {
         })
     }
 
+    // Populates the teams object with the spread data
     calculateSpread(){
         this.teams.forEach(team => {
             team.spreadData = []
@@ -283,6 +304,7 @@ class ChordDiagram {
         })
     }
 
+    // Shuffle the array (for the animation)
     shuffleArray(array) {
         for (var i = array.length - 1; i > 0; i--) {
             var j = Math.floor(Math.random() * (i + 1));
